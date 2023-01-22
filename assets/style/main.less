@@ -1,0 +1,66 @@
+@import url('./css-variables.less');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+a.nuxt-link{
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--gm-colors-black);
+}
+
+a:hover, a.nuxt-link-exact-active {
+    color: var(--gm-colors-primary);
+}
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f5f7fa;
+
+    main {
+        flex: 1;
+    }
+}
+input:focus {
+    outline: none;
+}
+
+.vue-notification {
+    margin: 0 5px 5px;
+    padding: 10px;
+    font-size: 12px;
+    color: #ffffff;
+    background: #44A4FC;
+    border-left: 5px solid #187FE7;
+
+    &-group {
+        position: absolute;
+        top: 10px;
+        right: 0;
+    }
+    
+    &.success {
+        background: var(--gm-main-colorfull-background-color);
+        border-left-color: #42A85F;
+    }
+
+    &.warn {
+        background: #ffb648;
+        border-left-color: #f48a06;
+    }
+
+    &.error {
+        background: #E54D42;
+        border-left-color: #B82E24;
+    }
+}
