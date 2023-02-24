@@ -2,12 +2,14 @@ import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import VueRouter from 'vue-router';
 import VueI18n, { IVueI18n } from 'vue-i18n';
 import { Auth } from '@nuxtjs/auth-next';
+import ActivitiesComplex from '~/services/ActivitiesComplex';
 
 type Services = {
     i18n: VueI18n & IVueI18n;
     router: VueRouter | undefined;
     $axios: NuxtAxiosInstance;
     $auth: Auth;
+    complex: ActivitiesComplex,
 };
 
 let $services = {} as Services;

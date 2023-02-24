@@ -70,7 +70,7 @@ export default class StickyHeader extends Vue {
         {
             name: 'Главная',
             to: "/",
-            show: true,
+            show: false,
         },
         {
             name: "Программы тренировок",

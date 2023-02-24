@@ -11,6 +11,9 @@ module.exports = {
     ],
     plugins: [
     ],
+    parserOptions: {
+        "ecmaVersion": 2021
+    },
     // add your custom rules here
     rules: {
         indent: ['error', 4],
@@ -37,8 +40,10 @@ module.exports = {
         'no-dupe-class-members': 'off',
         'vue/comment-directive': 'error', // plugin:vue/recommended
         'vue/jsx-uses-vars': 'error', // plugin:vue/recommended
-        'vue/no-multiple-template-root': 'warning',
-
+        'vue/no-multiple-template-root': false,
+        "vue/multi-word-component-names": ["error", {
+            "ignores": ["default", "home"]
+            }]
     },
     settings: {
         'import/resolver': {

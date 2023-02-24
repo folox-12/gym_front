@@ -1,11 +1,11 @@
 <template>
     <div class="layout-auth">
         <div :class="$style.auth">
-            <div :class="$style.logo">
-                <div :class="$style.logoContent">
-                    <img src="~/static/img/mainLogoTransperent.png" alt="Main Logo">
+                <div :class="$style.logo">
+                    <div :class="$style.logoContent">
+                        <img src="~/static/img/mainLogoTransperent.png" alt="Main Logo">
+                    </div>
                 </div>
-            </div>
             <div :class="$style.form">
                 <Nuxt/>
             </div>

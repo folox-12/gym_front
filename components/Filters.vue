@@ -1,26 +1,222 @@
 <template>
-    <div class="gm-filter">
-        <slot name="view"/>
-    </div>
+    <base-container>
+        <base-button :class="$style.openButton" @click="isOpen = !isOpen">
+            <base-icon :path="searchIcon" color="white" />
+        </base-button>
+        <div :class="$style.filter">
+            <div v-show="isOpen" :class="$style.leftSide">
+                <div :class="$style.leftSideContent">
+                    <keep-alive>
+                        <div>
+                            <base-input
+                                v-model="search"
+                                iconSize="48"
+                                :iconRight="searchIcon"
+                                :placeholder="searchString"
+                            />
+                            <base-button
+                                :class="$style.search"
+                                @click="updateSearchFilter"
+                            >
+                                Найти
+                            </base-button>
+                        </div>
+                    </keep-alive>
+                </div>
+            </div>
+            <div :class="$style.rightSide">
+                <div v-if="loading" :class="$style.loading">
+                    <base-loader />
+                </div>
+                <div v-else>
+                    <div v-if="!total">Ничего не найдено</div>
+                    <div v-else>
+                        <slot
+                            :filters="filters"
+                            :updatePage="updatePageHandler"
+                            :total="total"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </base-container>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import {BaseContainer} from '~/components/base'
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import {
+    BaseContainer,
+    BaseText,
+    BaseLoader,
+    BaseInput,
+} from "~/components/base";
+import { FiltersTypes } from "~/types/Filters";
+import { useFiltersStore } from "~/pinia-store/useFiltersStore";
+import { mapActions, mapState } from "pinia";
+import { mdiMagnify } from "@mdi/js";
 
-@Component ({
-    name: 'filter',
+const Mappers = Vue.extend({
+    computed: {
+        ...mapState(useFiltersStore, ["filters"]),
+    },
+
+    methods: {
+        ...mapActions(useFiltersStore, [
+            "updatePagging",
+            "updateSearch",
+            "updatePaggingSize",
+            "resetFilters",
+        ]),
+    },
+});
+Component.registerHooks(["fetch"]);
+@Component({
     components: {
         BaseContainer,
-    }
+        BaseText,
+        BaseLoader,
+        BaseInput,
+    },
 })
-export default class Filter extends Vue {
+export default class Filters extends Mappers {
     @Prop({
         type: Function,
         default: () => null,
-    }) readonly fetchData!: (...args:any) => any;
+    })
+    readonly fetchData!: (...args: any) => any;
+
+    @Prop({
+        type: Object as () => FiltersTypes,
+        default: undefined,
+    })
+    readonly defaultFilters!: FiltersTypes;
+
+    @Prop({
+        type: Boolean,
+        default: false,
+    })
+    readonly loading?: boolean;
+
+    @Prop({
+        type: Number,
+        default: 0,
+    })
+    readonly total?: number;
+
+    @Prop({
+        type: String,
+        default: "Поиск по названию",
+    })
+    readonly searchString?: string;
+
+    search = "";
+
+    updatePageHandlerValue = false;
+    updateSearchValue = false;
+
+    isOpen = false;
+
+    searchIcon = mdiMagnify;
+
+    updatePageHandler(page: number | null) {
+        if (page && page !== this.filters.pagging) {
+            this.updatePagging(page);
+            this.updatePageHandlerValue = true;
+        }
+    }
+
+    updateSearchFilter() {
+        if (this.search !== this.filters.search) {
+            this.updateSearch(this.search);
+            this.updateSearchValue = true;
+        }
+    }
+
+    @Watch("updateSearchValue")
+    @Watch("updatePageHandlerValue")
+    async refetchData(newVal: boolean, oldVal: boolean) {
+        if (this.filters.search && !this.updatePageHandlerValue) {
+            this.updatePagging(1);
+        }
+
+        if (!this.updatePageHandlerValue && !this.updateSearchValue) {
+            return;
+        }
+        await this.fetchData(this.filters);
+        this.updatePageHandlerValue = false;
+        this.updateSearchValue = false;
+    }
+
+    created() {
+        if (this.defaultFilters) {
+            if (this.defaultFilters.search) {
+                this.updateSearch(this.defaultFilters.search);
+            }
+
+            if (this.defaultFilters.paggingSize) {
+                this.updatePaggingSize(this.defaultFilters.paggingSize);
+            }
+        }
+    }
+
+    beforeDestroy() {
+        this.resetFilters();
+    }
+
+    async fetch() {
+        if (this.fetchData != null) {
+            await this.fetchData(this.filters);
+        }
+    }
 }
 </script>
 
-<style lang="less">
+<style lang="less" module>
+.filter {
+    display: flex;
+    gap: 10px;
+}
 
+.right-side {
+    flex: 1 1 60%;
+}
+
+.open-button {
+    margin-bottom: 30px;
+}
+
+.left-side {
+    flex-grow: 0;
+}
+
+.left-side-content {
+    padding: 10px;
+    background: #fff;
+}
+
+.search {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.loading {
+    text-align: center;
+    margin: 30px 0 30px;
+}
+
+@media screen and (max-width: @lg) {
+    .filter {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .left-side-content > div {
+        display: flex;
+        gap: 30px;
+    }
+
+    .search {
+        width: fit-content;
+    }
+}
 </style>

@@ -42,12 +42,13 @@ export default {
         { src: '@/plugins/auth.ts' },
         { src: '@/plugins/onAxiosErrors.ts' },
         { src: '@/plugins/notification.js' },
+        { src: '@/plugins/serviceAccessor.ts' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
 
-    // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
+    // Modules for dev and build recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
     // https://go.nuxtjs.dev/typescript
         '@nuxt/typescript-build',

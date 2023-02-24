@@ -38,14 +38,13 @@ const ICON_COLORS = {
     black: 'black',
     dark: 'dark',
     lightDark: 'light-dark',
-    faded: 'faded',
-    accent: 'accent',
     white: 'white',
     warning: 'warning',
     error: 'error',
     danger: 'danger',
     primary: 'primary',
     success: 'success',
+    basic: 'basic',
 } as const;
 
 const DEFAULT_VIEWBOX = '0 0 24 24';
@@ -108,17 +107,16 @@ export default class BaseIcon extends Vue {
     getIconClasses(): IconClassHash {
         return {
             [`${BASE_CLASS}--default`]: this.color === ICON_COLORS.default,
-            [`${BASE_CLASS}--faded`]: this.color === ICON_COLORS.faded,
             [`${BASE_CLASS}--black`]: this.color === ICON_COLORS.black,
             [`${BASE_CLASS}--dark`]: this.color === ICON_COLORS.dark,
             [`${BASE_CLASS}--light-dark`]: this.color === ICON_COLORS.lightDark,
-            [`${BASE_CLASS}--accent`]: this.color === ICON_COLORS.accent,
             [`${BASE_CLASS}--white`]: this.color === ICON_COLORS.white,
             [`${BASE_CLASS}--warning`]: this.color === ICON_COLORS.warning,
             [`${BASE_CLASS}--error`]: this.color === ICON_COLORS.error,
             [`${BASE_CLASS}--danger`]: this.color === ICON_COLORS.danger,
             [`${BASE_CLASS}--primary`]: this.color === ICON_COLORS.primary,
             [`${BASE_CLASS}--success`]: this.color === ICON_COLORS.success,
+            [`${BASE_CLASS}--basic`]: this.color === ICON_COLORS.basic,
             [`${BASE_CLASS}--reverted`]: this.reverted,
             [`${BASE_CLASS}--left`]: this.left,
             [`${BASE_CLASS}--right`]: this.right,
@@ -137,50 +135,54 @@ export default class BaseIcon extends Vue {
 
 .svg-icon {
     &--default {
-        fill: var(--fd-colors-black-alpha-600);
+        fill: var(--gm-colors-black-alpha-600);
     }
 
     &--faded {
-        fill: var(--fd-colors-black-alpha-200);
+        fill: var(--gm-colors-black-alpha-200);
     }
 
     &--light-dark {
-        fill: var(--fd-colors-black-alpha-400);
+        fill: var(--gm-colors-black-alpha-400);
     }
 
     &--dark {
-        fill: var(--fd-colors-black-alpha-800);
+        fill: var(--gm-colors-black-alpha-800);
     }
 
     &--black {
-        fill: var(--fd-colors-black);
+        fill: var(--gm-colors-black);
     }
 
     &--accent {
-        fill: var(--fd-colors-accent);
+        fill: var(--gm-colors-accent);
     }
     &--white {
-        fill: var(--fd-colors-white);
+        fill: var(--gm-colors-white);
     }
 
     &--warning {
-        fill: var(--fd-colors-warning);
+        fill: var(--gm-colors-warning);
     }
 
     &--error {
-        fill: var(--fd-colors-error);
+        fill: var(--gm-colors-error);
     }
 
     &--danger {
-        fill: var(--fd-colors-danger);
+        fill: var(--gm-colors-danger);
     }
 
     &--primary {
-        fill: var(--fd-colors-primary);
+        fill: var(--gm-colors-primary);
     }
 
     &--success {
-        fill: var(--fd-colors-success);
+        fill: var(--gm-colors-success);
+    }
+
+    &--basic {
+        fill: var(--gm-colors-primary);
     }
 
     &--reverted {

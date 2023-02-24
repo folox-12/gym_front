@@ -28,11 +28,13 @@
                 as="div"
             >
                 Пароль
+
             </base-text>
+
             <base-input
                 v-model="data.password"
                 :type-input="typePasswordInput"
-                :right-icon-action="showPassword" 
+                :right-icon-action="showPassword"
                 :iconRight="icons.eye"
                 iconSize="14"
             />
@@ -43,16 +45,16 @@
                     <base-text :class="$style.hasAccount">Ещё нет аккаунта?</base-text>
 
                     <base-button
-                        as="a" 
+                        as="a"
                         @click="routeToRegistrationPage"
                      >
-                        Зарегистрируйтесь 
+                        Зарегистрируйтесь
                     </base-button>
                 </base-text>
                 <base-button
                     @click.prevent="loginUser"
                 >
-                    Отправить 
+                    Отправить
                 </base-button>
             </div>
         </form>
@@ -98,7 +100,6 @@ export default class AuthPage extends Vue{
         }
     }
 
-
     head() {
         return {
             title: "Авторизация - fitno"
@@ -128,7 +129,7 @@ export default class AuthPage extends Vue{
                     title: 'Успешно',
                     text: 'Успшеная авторизация'
                 });
-            } 
+            }
         } catch (e) {
         }
     }
@@ -190,6 +191,6 @@ export default class AuthPage extends Vue{
 @media screen and (max-width: @sm) {
     .buttons {
         text-align: left;
-    }    
+    }
 }
 </style>

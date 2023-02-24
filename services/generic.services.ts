@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AXIOS_COLLECTION, HTTP_REQUESTS } from '~/types/apiUrl';
 
-const API_URL = 'http://localhost:5000';
+export const API_URL = 'http://localhost:5000';
 
 export const request = async({ url, method, data } : AXIOS_COLLECTION) => {
     let result: any;

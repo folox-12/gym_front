@@ -20,5 +20,5 @@ export default {
 
 </script>
 <style lang="less">
-    main { margin-top: 100px; }
+    main { margin-top: 80px; }
 </style>
