@@ -21,7 +21,6 @@ enum TextTag {
 }
 
 enum TextColor {
-    ACCENT = 'accent',
     NORMAL = 'normal',
     LIGHTER = 'lighter',
     LIGHT = 'light',
@@ -50,6 +49,17 @@ enum TextWeight {
     BOLD = 'bold',
 }
 
+enum TextWrap {
+    wrap = 'wrap',
+}
+
+enum TextTransform {
+    NONE = 'none',
+    CAPITALIZE = 'capitalize',
+    UPPERCASE = 'uppercase',
+    LOWERCASE = 'lowercase',
+}
+
 @Component({
     inheritAttrs: false,
     name: 'BaseText',
@@ -70,6 +80,14 @@ export default class Text extends Vue {
             .values(TextSize)
             .includes(value),
     }) readonly size!: TextSize;
+
+    @Prop({
+        type: String as () => TextTransform,
+        default: TextTransform.NONE,
+        validator: (value: TextTransform) => Object
+            .values(TextTransform)
+            .includes(value),
+    }) readonly textTransform!: TextTransform;
 
     @Prop({
         type: String as () => TextWeight,
@@ -101,6 +119,7 @@ export default class Text extends Vue {
         return {
             [`gm-text--${this.size}`]: this.size,
             [`gm-text--${this.color}`]: this.color,
+            [`gm-text--${this.textTransform}`]: this.textTransform,
             [`gm-text--${this.weight}`]: this.weight,
             'gm-text--break-word': this.breakWord,
             'gm-text--text-overflow': this.textOverflow,
@@ -123,7 +142,6 @@ export default class Text extends Vue {
     &--lighter { color: var(--gm-colors-black-alpha-400); }
     &--success { color: var(--gm-colors-success); }
     &--primary { color: var(--gm-colors-primary); }
-    &--accent { color: var(--gm-colors-accent); }
     &--warning { color: var(--gm-colors-warning); }
     &--error { color: var(--gm-colors-error); }
     &--danger { color: var(--gm-colors-danger); }
@@ -136,6 +154,9 @@ export default class Text extends Vue {
     &--xl { font-size: var(--gm-font-size-xl); }
     &--xxl { font-size: var(--gm-font-size-xxl); }
     &--break-word { word-break: break-word; }
+    &--uppercase { text-transform: uppercase; }
+    &--lowercase { text-transform: lowercase; }
+    &--capitalize { text-transform: capitalize; }
     &--text-overflow {
         overflow: hidden;
         text-overflow: ellipsis;

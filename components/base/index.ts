@@ -5,6 +5,8 @@ import Icon from '~/components/base/Icon.vue';
 import Input from '~/components/base/Input.vue';
 import Message from '~/components/base/Message.vue';
 import Loader from '~/components/base/Loader.vue';
+import Card from '~/components/base/Card.vue';
+import SimpleTable from '~/components/base/SimpleTable.vue';
 
 export {
     Button as BaseButton,
@@ -14,4 +16,6 @@ export {
     Message as BaseMessage,
     BaseContainer,
     Loader as BaseLoader,
+    Card as BaseCard,
+    SimpleTable as BaseSimpleTable,
 };

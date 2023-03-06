@@ -20,7 +20,6 @@
                 </div>
         </div>
             </client-only>
-        <div :class="$style.total">Найдено всего {{ totalCount }}</div>
     </base-container>
 </template>
 <script lang="ts">
@@ -115,7 +114,7 @@ export default class Paggination extends Vue {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px;
+    margin-block: 20px;
     position: relative;
 }
 

@@ -2,22 +2,24 @@
     <header :class="$style.header">
         <base-container>
             <nav>
-                <div :class="$style.icon" 
+                <div :class="$style.icon"
                     @click="$router.push('/')"
                 >
                     <img src="~/static/img/mainLogo.png">
                 </div>
                 <ul>
                     <li v-for="(item, index) in navigationsElements" :key="index" >
-                        <nuxt-link class="nuxt-link" :to="item.to" v-if="item.show">
+                        <nuxt-link class="nuxt-link"  v-if="item.show"
+                        :to="item.to"
+                        >
                             {{item.name}}
                         </nuxt-link>
                     </li>
                 </ul>
-                <div 
+                <div
                 :class="$style.buttons">
                     <base-button
-                        v-if="!$auth.loggedIn" 
+                        v-if="!$auth.loggedIn"
                         :text="$t('general.signIn')"
                         @click="routeToAuthPage"
                     />
@@ -87,7 +89,7 @@ export default class StickyHeader extends Vue {
         this.$auth.logout();
     }
     routeToAuthPage() {
-        this.$router.push({path:'auth/'})
+        this.$router.push('/auth')
     }
 }
 
@@ -98,7 +100,7 @@ export default class StickyHeader extends Vue {
     width: 100%;
     background-color: #fff;
 
-    nav { 
+    nav {
         display: grid;
         grid-template-columns: 150px auto 1fr;
         align-items: center;
@@ -118,8 +120,8 @@ export default class StickyHeader extends Vue {
     width: 120px;
     height: 120px;
     cursor: pointer;
-    
-    img { 
+
+    img {
         position: absolute;
         top: 0;
         left: 0;

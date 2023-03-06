@@ -4,9 +4,9 @@ import { User } from '~/types/Users';
 
 const url = 'users';
 
-export const getUser = () => request({ url, method: 'get' });
+// export const getUser = () => request({ url, method: 'get' });
 
-export const getCurrentUser = (id: number) => request({url, method: 'get', data: {id}})
+// export const getCurrentUser = (id: number) => request({url, method: 'get', data: {id}})
 
 export const registration = async(payload: Partial<User>) => await axios({
     method: 'post',

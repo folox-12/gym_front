@@ -1,11 +1,13 @@
 <template>
-    <base-icon
-        class="gm-loading"
-        :path="icon"
-        color="basic"
-        width="48"
-        height="48"
-   />
+    <div class="gm-loader">
+        <base-icon
+            class="gm-loader-icon"
+            :path="icon"
+            color="basic"
+            width="48"
+            height="48"
+           />
+    </div>
 </template>
 
 <script lang="ts">
@@ -34,11 +36,15 @@ export default class Loader extends Vue {
   }
 }
 
-.gm-loading {
+.gm-loader-icon {
     min-height: 48px;
     animation-duration: .7s;
     animation-name: round_rotate;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+.gm-loader {
+    text-align: center;
+    padding-block: 30px;
 }
 </style>

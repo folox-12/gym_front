@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import VueI18n, { IVueI18n } from 'vue-i18n';
 import { Auth } from '@nuxtjs/auth-next';
 import ActivitiesComplex from '~/services/ActivitiesComplex';
+import Subscription from '~/services/SubscriptionService';
 
 type Services = {
     i18n: VueI18n & IVueI18n;
@@ -10,6 +11,7 @@ type Services = {
     $axios: NuxtAxiosInstance;
     $auth: Auth;
     complex: ActivitiesComplex,
+    subscription: Subscription,
 };
 
 let $services = {} as Services;

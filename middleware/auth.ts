@@ -12,9 +12,8 @@ const authorizated: Middleware = async(context) => {
     } else {
         if (!isAuth) {
             return context.redirect('/');
-        } 
+        }
     }
 };
 
 export default authorizated;
-

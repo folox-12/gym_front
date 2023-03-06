@@ -318,7 +318,7 @@ export default class Input extends Vue {
         max-width: 100%;
         width: 100%;
         height: auto;
-        padding: 10px 38px 10px 16px;
+        padding: 10px 10px 10px 16px;
         box-shadow: var(--gm-shadow-general-box);
         border: 1px solid transparent;
         color: var(--gm-colors-black-alpha-800);
@@ -346,7 +346,6 @@ export default class Input extends Vue {
     }
 
     textarea {
-        // allow only vertical resize by default
         resize: vertical;
     }
 

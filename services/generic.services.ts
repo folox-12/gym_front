@@ -1,20 +1,10 @@
-import axios from 'axios';
-import { AXIOS_COLLECTION, HTTP_REQUESTS } from '~/types/apiUrl';
-
 export const API_URL = 'http://localhost:5000';
 
-export const request = async({ url, method, data } : AXIOS_COLLECTION) => {
-    let result: any;
-
-    if (method === HTTP_REQUESTS.GET) {
-        let fullUrl = `${API_URL}/${url}`;
-        if (data) {
-            fullUrl += `/${data.id}`
-        }
-        result = await axios.get(fullUrl);
+export async function request<Type>(request:()=> Promise<Type>,) : Promise<{data: Type | null, error: string | null}>{
+    try {
+        const data = await request();
+        return { data, error:null}
+    } catch (error: any) {
+        return { data: null, error: error.response.data.error }
     }
-    if (method === HTTP_REQUESTS.POST) {
-        result = await axios.post(`${API_URL}/:${url}`);
-    }
-    return result;
-};
+}

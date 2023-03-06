@@ -16,6 +16,7 @@
             "~/*": ["./*"],
             "@/*": ["./*"]
         },
+
         "types": [
             "@types/node",
             "@nuxtjs/axios",
@@ -23,7 +24,10 @@
             "vue-notification",
             "nuxt-i18n",
             "@nuxtjs/auth-next",
-            "@pinia/nuxt"
+            "@pinia/nuxt",
+            "@nuxtjs/dayjs",
+            "dayjs/plugin/relativeTime",
+            "vue-rate-it"
         ]
     },
     "exclude": ["node_modules"]

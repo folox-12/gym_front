@@ -82,6 +82,7 @@ export default {
         '@nuxtjs/auth',
         '@nuxtjs/style-resources',
         '@nuxtjs/composition-api/module',
+        '@nuxtjs/dayjs',
     ],
     auth: {
         strategies: {

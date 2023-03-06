@@ -1,11 +1,15 @@
 import { UserAsAuthor } from "./Users";
+import { ActivityType } from "./Activity";
 
 export interface ActivitiesComplexType {
     id_activities_complex?: number;
-    id_author: number;
-    title: string;
-    description: string;
-    date_creation: Date;
-    rating: number;
-    author: UserAsAuthor;
+    id_author: number | null;
+    title: string | null;
+    description: string | null;
+    date_creation: Date | null;
+    rating: number | null;
+    author?: UserAsAuthor;
+}
+export interface ActivitiesComplexWithActivities extends ActivitiesComplexType {
+    activities: ActivityType[];
 }

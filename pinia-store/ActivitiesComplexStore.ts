@@ -5,9 +5,20 @@ import { $services } from "~/utils/service";
 import { FiltersTypes } from "~/types/Filters";
 
 interface State {
-    activities: NetworkData<Array<ActivitiesComplexType>>;
+    activities: NetworkData<ActivitiesComplexType[]>;
     totalActivities: number;
     defaultFilters: FiltersTypes;
+    currentActivity: NetworkData<ActivitiesComplexType>
+}
+
+const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexType = {
+    id_activities_complex: undefined,
+    id_author: null,
+    title: null,
+    description: null,
+    date_creation: null,
+    rating: 1,
+    author: undefined,
 }
 export const useActivitiesComplex = defineStore("activitiesComplex", {
     state: (): State => ({
@@ -20,10 +31,15 @@ export const useActivitiesComplex = defineStore("activitiesComplex", {
         defaultFilters: {
             pagging: 1,
             search: "",
-            paggingSize: 1,
         },
 
         totalActivities: 0,
+
+        currentActivity: {
+            loading: false,
+            data: null,
+            error: null,
+        }
     }),
 
     getters: {
@@ -33,13 +49,26 @@ export const useActivitiesComplex = defineStore("activitiesComplex", {
     actions: {
         async getAllActivities(filters: FiltersTypes) {
             this.activities.loading = true;
-            const data = await $services.complex.getMainActivitiesComplex(
+            const { data, error}  = await $services.complex.getMainActivitiesComplex(
                 filters
             );
-            this.activities.loading = false;
-
-            this.activities.data = data.result;
-            this.totalActivities = data.totalCount;
+            if (error) {
+                return this.activities = {...this.activities, error, loading: false}
+            }
+            this.totalActivities = data!.totalCount;
+            this.activities = {data: data!.result, loading: false}
         },
+
+        async getCurrentActivity(id: string | number) {
+            this.currentActivity.loading = true;
+            const { data, error } = await $services.complex.getCurrentActivity(id);
+            this.currentActivity = { data, error, loading: false};
+        },
+
+        resetCurrentActivityForm() {
+            this.currentActivity.data = {
+                ...DEFAULT_ACTIVITIES_FORM,
+            };
+        }
     },
 });

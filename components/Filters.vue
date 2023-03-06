@@ -10,16 +10,23 @@
                         <div>
                             <base-input
                                 v-model="search"
-                                iconSize="48"
-                                :iconRight="searchIcon"
                                 :placeholder="searchString"
                             />
-                            <base-button
-                                :class="$style.search"
-                                @click="updateSearchFilter"
-                            >
-                                Найти
-                            </base-button>
+                            <div :class="$style.buttons">
+                                <base-button
+                                    :class="$style.search"
+                                    @click="updateSearchFilter()"
+                                >
+                                    Найти
+                                </base-button>
+                                <base-button
+                                    :class="$style.search"
+                                    :disabled="!search"
+                                    @click="updateSearchFilter(true)"
+                                >
+                                    Очистить
+                                </base-button>
+                            </div>
                         </div>
                     </keep-alive>
                 </div>
@@ -29,8 +36,32 @@
                     <base-loader />
                 </div>
                 <div v-else>
-                    <div v-if="!total">Ничего не найдено</div>
+                    <div v-if="!total">
+                        <base-text
+                            :class="$style.empty"
+                            as="div"
+                            color="lighter"
+                            size="xl"
+                        >
+                            Ничего не найдено
+                        </base-text>
+                    </div>
                     <div v-else>
+                        <base-text
+                            v-if="filters.search"
+                            as="div"
+                            color="light"
+                            :class="$style.searchText"
+                        >
+                            <slot
+                                name="searchText"
+                                :search="filters.search"
+                                :total="total"
+                            >
+                                По запросу {{ filters.search }} найдено
+                                {{ total }} элементов
+                            </slot>
+                        </base-text>
                         <slot
                             :filters="filters"
                             :updatePage="updatePageHandler"
@@ -125,7 +156,11 @@ export default class Filters extends Mappers {
         }
     }
 
-    updateSearchFilter() {
+    updateSearchFilter(clear: boolean = false) {
+        if (clear) {
+            this.search = "";
+        }
+
         if (this.search !== this.filters.search) {
             this.updateSearch(this.search);
             this.updateSearchValue = true;
@@ -135,16 +170,16 @@ export default class Filters extends Mappers {
     @Watch("updateSearchValue")
     @Watch("updatePageHandlerValue")
     async refetchData(newVal: boolean, oldVal: boolean) {
-        if (this.filters.search && !this.updatePageHandlerValue) {
+        if (this.filters.search && !this.updatePageHandlerValue && newVal) {
             this.updatePagging(1);
         }
 
         if (!this.updatePageHandlerValue && !this.updateSearchValue) {
             return;
         }
-        await this.fetchData(this.filters);
         this.updatePageHandlerValue = false;
         this.updateSearchValue = false;
+        await this.fetchData(this.filters);
     }
 
     created() {
@@ -181,6 +216,10 @@ export default class Filters extends Mappers {
     flex: 1 1 60%;
 }
 
+.search-text {
+    margin-bottom: 15px;
+}
+
 .open-button {
     margin-bottom: 30px;
 }
@@ -202,6 +241,17 @@ export default class Filters extends Mappers {
 .loading {
     text-align: center;
     margin: 30px 0 30px;
+}
+
+.empty {
+    text-align: center;
+    padding-block: 10px;
+    background-color: #fff;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
 }
 
 @media screen and (max-width: @lg) {

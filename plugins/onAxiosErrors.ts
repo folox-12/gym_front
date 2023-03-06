@@ -6,18 +6,15 @@ const plugin: Plugin = ({
     app,
 }) => {
     $axios.onError((error) => {
-        if (error?.response?.data?.message === 'TokenExpiredError') {
+        if (error?.response?.data?.error === 'TokenExpiredError') {
             const path = '/time-out'
+
+            redirect(path);
+
+
             app.$auth.reset()
-            if (process.client) {
-                console.log("client")
-                window.location.replace(path);
-            } else {
-                console.log("client")
-                redirect(path);
-            }
         } else {
-            const { message } = error.response?.data;
+            const message = error.response?.data.error;
             const transmittedData = error.response?.status;
             const responseError = {
                 ...error,
@@ -28,7 +25,7 @@ const plugin: Plugin = ({
             };
 
             throw responseError;
-           
+
         }
     });
 };
