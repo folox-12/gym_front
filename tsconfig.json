@@ -27,7 +27,7 @@
             "@pinia/nuxt",
             "@nuxtjs/dayjs",
             "dayjs/plugin/relativeTime",
-            "vue-rate-it"
+            "@types/vue-clickaway"
         ]
     },
     "exclude": ["node_modules"]

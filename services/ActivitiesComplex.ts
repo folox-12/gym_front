@@ -26,6 +26,26 @@ class ActivitiesComplex extends APIService {
         );
         return data;
     }
+
+    async deleteActivityComplex(id: string | number) {
+        const data = request<boolean>(() =>
+            this.$axios.$delete<boolean>(
+                `${API_URL}/activities-complex/${id}`,
+            )
+        );
+
+        return data;
+    }
+
+    async isUserAuthor(id: string | number) {
+        const data = request<boolean>(() =>
+            this.$axios.$get<boolean>(
+                `${API_URL}/is-user-author-complex/${id}`,
+            )
+        );
+
+        return data;
+    }
 }
 
 export default ActivitiesComplex;

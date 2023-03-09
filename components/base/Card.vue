@@ -2,6 +2,7 @@
     <div :class="$style.container">
         <div :class="$style.title">
             <base-text
+                :class="$style.titleText"
                 size="xl"
                 weight="bold"
                 color="dark"
@@ -22,7 +23,7 @@
             </div>
         </div>
         <div :class="$style.subtitle">
-            <base-text size="lg" weight="bold" color="lighter">
+            <base-text size="lg" weight="bold" color="lighter" :class="$style.subtitleText">
                 {{ description }}
             </base-text>
         </div>
@@ -100,10 +101,18 @@ export default class Card extends Vue {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+
+    &-text {
+        word-break: break-all;
+    }
 }
 
 .subtitle {
     margin-bottom: 10px;
+
+    &-text {
+        word-break: break-all;
+    }
 }
 
 .hide {

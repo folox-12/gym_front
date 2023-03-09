@@ -59,8 +59,8 @@
                 </div>
             </div>
             <div :class="$style.button" v-if="showButton">
-                <base-button variant="simple" @click="subscribe">
-                    Подписаться
+                <base-button variant="simple" @click="buttonCallback" :loading="buttonLoading" :width="100">
+                    {{ buttonText }}
                 </base-button>
             </div>
         </div>
@@ -82,14 +82,14 @@ import { getFullNameFromNameAndSurname } from "~/utils/general";
         FormRow,
         Rating,
         BaseSimpleTable,
+        BaseText,
     },
 })
 export default class TraningForm extends Vue {
     @Prop({
-        type: Object as () => ActivitiesComplexWithActivities,
-        required: true,
+        type: Object as () => ActivitiesComplexWithActivities | null,
     })
-    readonly activity!: ActivitiesComplexWithActivities;
+    readonly activity?: ActivitiesComplexWithActivities | null;
 
     @Prop({
         type: Boolean,
@@ -103,8 +103,20 @@ export default class TraningForm extends Vue {
     })
     readonly showButton?: boolean;
 
+    @Prop({
+        type: Boolean,
+        default: false,
+    })
+    readonly buttonLoading?: boolean;
+
+    @Prop({
+        type: String,
+        default: "Сохранить",
+    })
+    readonly buttonText?: string;
+
     get fullName() {
-        if (this.activity.author !== undefined) {
+        if (this.activity && this.activity.author !== undefined) {
             return getFullNameFromNameAndSurname(
                 this.activity.author.name,
                 this.activity.author.surname
@@ -116,7 +128,7 @@ export default class TraningForm extends Vue {
         return {
             headers:['Название упражнения', 'Часть тела', 'Сложность'],
             rows:[
-              ...this.activity.activities.map(el=>{
+              ...this.activity!.activities.map(el=>{
                 return {
                     name: el.name,
                     bodypart: el.bodypart.name,
@@ -127,8 +139,8 @@ export default class TraningForm extends Vue {
         }
     }
 
-    @Emit("subscribe")
-    subscribe() {}
+    @Emit("buttonCallback")
+    buttonCallback() {}
 }
 </script>
 <style lang="less" module>

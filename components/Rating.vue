@@ -1,5 +1,6 @@
 <template>
     <div
+        class="gm-rating"
         :class="{
             [$style.readonly]: readonly,
         }"
@@ -94,6 +95,7 @@ export default class Rating extends Vue {
 }
 </script>
 <style lang="less" module>
+.rating {}
 .star {
     display: flex;
     flex-direction: column-reverse;

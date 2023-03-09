@@ -4,15 +4,25 @@
         v-bind="$attrs"
         class="gm-button"
         :class="textClasses"
+        :disabled="loading"
         v-on="$listeners"
     >
-        <slot>
-            {{ text }}
-        </slot>
+            <div v-if="loading">
+                <loader
+                    :width="width"
+                    :height="20"
+                 />
+            </div>
+            <div v-else>
+                <slot>
+                    {{ text }}
+                </slot>
+            </div>
     </component>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+import  Loader  from "~/components/base/Loader.vue"
 
 enum TextTag {
     A = "a",
@@ -43,8 +53,9 @@ enum Variant {
 }
 
 @Component({
-    inheritAttrs: false,
-    name: "BaseBUtton",
+    components: {
+        Loader,
+    }
 })
 export default class Button extends Vue {
     @Prop({
@@ -81,6 +92,18 @@ export default class Button extends Vue {
         default: false,
     })
     readonly breakWord!: boolean;
+
+    @Prop({
+        type: Boolean,
+        default: false,
+    })
+    readonly loading?: boolean;
+
+    @Prop({
+        type: Number,
+        default: 20,
+    })
+    readonly width?: number;
 
     @Prop({
         type: Boolean,
@@ -133,6 +156,10 @@ nuxt-link.gm-button {
     &:not([disabled]):hover {
         box-shadow: var(--gm-shadow-general-box);
         color: var(--gm-colors-white-alpha-800);
+    }
+
+    &:active {
+        transform: scale(.8);
     }
 
     &--simple {

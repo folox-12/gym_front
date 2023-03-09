@@ -4,14 +4,14 @@
             class="gm-loader-icon"
             :path="icon"
             color="basic"
-            width="48"
-            height="48"
+            :width="width"
+            :height="height"
            />
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import { mdiLoading } from "@mdi/js"
 import BaseIcon from "./Icon.vue";
 
@@ -22,6 +22,15 @@ import BaseIcon from "./Icon.vue";
 })
 export default class Loader extends Vue {
     icon = mdiLoading
+    @Prop({
+        type: Number,
+        default: 48,
+    }) readonly width?: number;
+
+    @Prop({
+        type: Number,
+        default: 48,
+    }) readonly height?: number;
 }
 </script>
 
@@ -37,7 +46,6 @@ export default class Loader extends Vue {
 }
 
 .gm-loader-icon {
-    min-height: 48px;
     animation-duration: .7s;
     animation-name: round_rotate;
     animation-iteration-count: infinite;
@@ -45,6 +53,5 @@ export default class Loader extends Vue {
 }
 .gm-loader {
     text-align: center;
-    padding-block: 30px;
 }
 </style>

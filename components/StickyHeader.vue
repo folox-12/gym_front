@@ -80,9 +80,9 @@ export default class StickyHeader extends Vue {
             show: true,
         },
         {
-            name: 'Дневник питания',
-            to: "/eats",
-            show: false,
+            name: 'Личный кабинет',
+            to: "/profile",
+            show: true,
         },
     ];
     logout() {

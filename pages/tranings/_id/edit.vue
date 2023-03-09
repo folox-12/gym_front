@@ -8,17 +8,26 @@
         <gym-title>
             <template #default>{{ currentTraningsInformation.title }}</template>
             <template #buttons>
-                    <base-button>
-
-                    </base-button>
+                <div class="d-flex">
+                    <div v-for="(icon, index) of icons" :key="index">
+                        <base-button
+                            v-if="icon.show"
+                            variant="unstyle"
+                            :title="icon.title"
+                            @click="icon.action"
+                        >
+                            <base-icon :path="icon.icon" :color="icon.color" />
+                        </base-button>
+                    </div>
+                </div>
             </template>
 
         </gym-title>
-        Редач
-        <traning-form
+        <traning-form-edit
             :activity="currentTraningsInformation"
             :loading="currentActivity.loading"
-            @subscribe="subscribe"
+            :showButton="$auth.loggedIn"
+            @subscribe="isUserAuthor"
         />
     </div>
 </template>
@@ -30,8 +39,10 @@ import { mapState, mapActions } from "pinia";
 import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
 import { useSubscription } from "~/pinia-store/SubscriptionStore";
 import { BaseContainer, BaseText, BaseButton, BaseIcon } from "~/components/base";
-import TraningForm from "~/components/tranings/TraningForm.vue";
-import { mdiTableEdit } from "@mdi/js";
+import TraningFormEdit from "~/components/tranings/TraningFormEdit.vue";
+import { mdiDelete, mdiCreditCard } from "@mdi/js";
+import isUserAuthorComplex from "~/middleware/isUserAuthorComplex"
+import authorizated from "~/middleware/auth"
 
 const Mappers = Vue.extend({
     computed: {
@@ -57,32 +68,55 @@ const Mappers = Vue.extend({
     components: {
         GymTitle,
         BaseContainer,
-        TraningForm,
+        TraningFormEdit,
         BaseText,
         BaseButton,
         BaseIcon,
     },
+
+    middleware: [authorizated, isUserAuthorComplex]
 })
 export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     get header() {
-        return `Редактирование ${this.currentId}`;
+        return `Редактирование программы №${this.currentId}`;
     }
 
     get currentTraningsInformation() {
-        return this.currentActivity.data || {};
+        return this.currentActivity.data;
+    }
+
+    get isUserAuthor() {
+        return this.currentTraningsInformation
+            ? this.$auth?.user?.id === this.currentTraningsInformation.id_author
+            : false;
     }
 
     get icons() {
-        return [
-            {
-                icon: mdiTableEdit,
-                path: `/tranings/${this.currentId}/edit`
+        return {
+            iconEdit: {
+                icon: mdiCreditCard,
+                color: "basic",
+                title: "Вернуться на страницу карточки",
+                action: this.routeToSimple,
+                show: this.isUserAuthor,
             },
-            {
-                icon: mdiTableEdit,
-                path: `/tranings/${this.currentId}/`
-            }
-        ]
+
+            iconDelete: {
+                icon: mdiDelete,
+                color: "danger",
+                title: "Удалить",
+                action: this.deleleteCurrentActivity,
+                show: this.isUserAuthor,
+            },
+        };
+    }
+
+    deleleteCurrentActivity() {
+        alert("delete")
+    }
+
+    routeToSimple() {
+        this.$router.push(`/tranings/${this.currentId}`);
     }
 
     async subscribe() {
