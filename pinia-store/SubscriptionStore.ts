@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
 import { NetworkData } from "~/types/helpers";
 import { $services } from "~/utils/service";
+import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
 
 interface State {
     isSubscribed: NetworkData<boolean>;
     subscribedComplexesId: NetworkData<(number | string)[]>;
     isUnsubscribed: NetworkData<boolean>;
+    subscribedComplexes: NetworkData<ActivitiesComplexWithActivities[]>;
 }
 
 export const useSubscription = defineStore("Subscription", {
@@ -23,6 +25,12 @@ export const useSubscription = defineStore("Subscription", {
         },
 
         subscribedComplexesId: {
+            data: null,
+            loading: false,
+            error: null,
+        },
+
+        subscribedComplexes: {
             data: null,
             loading: false,
             error: null,
@@ -50,6 +58,12 @@ export const useSubscription = defineStore("Subscription", {
             this.subscribedComplexesId.loading = true;
             const data = await $services.subscription.fetchSubscribedComplexesId();
             this.subscribedComplexesId = {...data, loading: false};
+        },
+
+        async fetchSubscribedComplexes() {
+            this.subscribedComplexes.loading = true;
+            const data = await $services.subscription.fetchSubscribtion();
+            this.subscribedComplexes= {...data, loading: false};
         }
     },
 });

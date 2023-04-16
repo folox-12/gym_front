@@ -2,6 +2,7 @@ import { Plugin } from '@nuxt/types';
 import { initializeServices } from '~/utils/service';
 import ActivitiesComplex from '~/services/ActivitiesComplex';
 import Subscription from '~/services/SubscriptionService';
+import Activity from '~/services/Acitvity';
 
 
 const accessor: Plugin = (ctx) => {
@@ -12,6 +13,7 @@ const accessor: Plugin = (ctx) => {
     } = ctx;
     const complex = new ActivitiesComplex($axios);
     const subscription = new Subscription($axios)
+    const activity = new Activity($axios)
 
     const services = {
         i18n,
@@ -19,6 +21,7 @@ const accessor: Plugin = (ctx) => {
         $axios,
         complex,
         subscription,
+        activity,
     };
 
     initializeServices(services);

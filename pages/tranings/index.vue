@@ -1,12 +1,12 @@
 <template>
     <div class="traning">
         <base-message
-            v-if="$auth.loggedIn && !$auth.user.isActivated"
+            v-if="$auth.loggedIn && !$auth.user?.isActivated"
             type="warning"
         >
             <base-text>
                 Для получения полного доступа к функционалу приложения
-                пожалуйста подтвердитe аккаунт на почте {{ $auth.user.email }},
+                пожалуйста подтвердитe аккаунт на почте {{ $auth.user?.email }},
                 а затем перезайдите в систему.
             </base-text>
         </base-message>
@@ -32,12 +32,12 @@
                             :description="activity.description"
                             :authorName="
                                 getFullName(
-                                    activity.author.name,
-                                    activity.author.surname
+                                    activity.author?.name,
+                                    activity.author?.surname
                                 )
                             "
-                            :authorEmail="activity.author.email"
-                            :dateCreation="activity.date_creation"
+                            :authorEmail="activity.author?.email"
+                            :date-creation="activity.date_creation"
                             :is-subscribed="isComplexesInSubscription(activity.id_activities_complex)"
                             @subscribeToComplex="
                                 subscribe(activity.id_activities_complex)
@@ -108,7 +108,7 @@ Component.registerHooks(["head"]);
 export default class homePage extends Mappers {
     header = "Список программ - fitno";
 
-    getFullName(name: string, surname: string) {
+    getFullName(name: string | undefined, surname: string | undefined) {
         return getFullNameFromNameAndSurname(name, surname);
     }
 
@@ -116,11 +116,13 @@ export default class homePage extends Mappers {
         return this.activities.data || [];
     }
 
-    isComplexesInSubscription(id: string | number) {
+   isComplexesInSubscription(id?: string | number) {
+        if (!id) return;
         return (this.subscribedComplexesId.data || []).includes(id) ;
     }
 
-    async subscribe(id: string | number) {
+    async subscribe(id?: string | number) {
+        if(!id) return;
         await this.subscribeToComplex(id);
         if (this.isSubscribed.error) {
             this.$notify({
@@ -141,7 +143,8 @@ export default class homePage extends Mappers {
         }
     }
 
-    async unsubscribe(id: string | number) {
+    async unsubscribe(id?: string | number) {
+        if(!id) return;
         await this.unsubscribeFromComplex(id);
         if (this.isUnsubscribed.error) {
             this.$notify({
@@ -162,8 +165,9 @@ export default class homePage extends Mappers {
         await this.fetchSubscribedComplexesId()
     }
 
-    routeToComplex(id: string | number) {
-        this.$router.push(`/tranings/${id}/`);
+    routeToComplex(id?: string | number) {
+        if (!id) return
+        this.$router.push(`/tranings/${id}`);
     }
 
     head() {

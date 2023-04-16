@@ -1,7 +1,7 @@
 export interface UserAsAuthor {
     id:number,
-    name?: string,
-    surname?: string,
+    name: string,
+    surname: string,
     email: string,
     rating: number,
 }

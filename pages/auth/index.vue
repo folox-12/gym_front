@@ -121,7 +121,6 @@ export default class AuthPage extends Vue{
     async loginUser() {
         try {
             const response = await this.$auth.loginWith('local', {data:this.data});
-
             if( response && response.status== 200 ) {
                 this.$notify({
                     group: 'foo',
@@ -130,7 +129,13 @@ export default class AuthPage extends Vue{
                     text: 'Успшеная авторизация'
                 });
             }
-        } catch (e) {
+        } catch ({responseError :{ message }}) {
+                this.$notify({
+                    group: 'foo',
+                    type: 'error',
+                    title: 'Ошибка',
+                    text: message as string,
+                })
         }
     }
 }

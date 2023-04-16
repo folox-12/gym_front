@@ -15,6 +15,13 @@
                             {{item.name}}
                         </nuxt-link>
                     </li>
+                    <li>
+                        <nuxt-link class="nuxt-link"  v-if="$auth.loggedIn"
+                            to="/profile/"
+                        >
+                            Личный кабинет
+                        </nuxt-link>
+                    </li>
                 </ul>
                 <div
                 :class="$style.buttons">
@@ -65,6 +72,7 @@ import { BaseContainer, BaseButton, BaseText } from '~/components/base/'
     components: {
         BaseContainer,
         BaseButton,
+        BaseText,
     }
 })
 export default class StickyHeader extends Vue {
@@ -77,11 +85,6 @@ export default class StickyHeader extends Vue {
         {
             name: "Программы тренировок",
             to: "/tranings",
-            show: true,
-        },
-        {
-            name: 'Личный кабинет',
-            to: "/profile",
             show: true,
         },
     ];

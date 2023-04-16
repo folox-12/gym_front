@@ -27,7 +27,7 @@
             :activity="currentTraningsInformation"
             :loading="currentActivity.loading"
             :showButton="$auth.loggedIn"
-            @subscribe="isUserAuthor"
+            @edit="edit"
         />
     </div>
 </template>
@@ -119,24 +119,8 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         this.$router.push(`/tranings/${this.currentId}`);
     }
 
-    async subscribe() {
-        await this.subscribeToComplex(this.currentId);
-        if (this.isSubscribed.error) {
-                this.$notify({
-                    group: 'server-response',
-                    type: 'error',
-                    title: 'Ошибка',
-                    text: this.isSubscribed.error,
-        });
-    } else {
-        this.$notify({
-            group: 'server-response',
-            type: 'success',
-            title: 'Успешно',
-            text: 'Успешно подисались',
-        });
-
-    }
+    async edit() {
+        alert('edit')
     }
     head() {
         return {

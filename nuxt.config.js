@@ -27,6 +27,7 @@ export default {
         '@/assets/style/variables.less',
         '@/assets/style/bootstrap-grid.min.css',
         '@/node_modules/normalize-css/normalize.css',
+        '@/node_modules/vue-select/dist/vue-select.css',
         '@/assets/style/main.less',
     ],
     styleResources: {
@@ -43,6 +44,7 @@ export default {
         { src: '@/plugins/onAxiosErrors.ts' },
         { src: '@/plugins/notification.js' },
         { src: '@/plugins/serviceAccessor.ts' },
+        { src: '@/plugins/vselect.js' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
