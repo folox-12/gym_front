@@ -7,12 +7,12 @@ interface BodyPartType {
 }
 
 export interface ActivityType {
-    id_activity: string | number,
-    name: string,
-    kilocalories: string | number,
-    id_difficulty?: string | number,
-    id_body_part?: string | number,
-    bodypart: BodyPartType,
-    difficulty: DifficultyType,
+    id_activity: string | number;
+    name: string;
+    kilocalories: string | number;
+    id_difficulty?: string | number;
+    id_body_part?: string | number;
+    bodypart: BodyPartType;
+    difficulty: DifficultyType;
 
 }

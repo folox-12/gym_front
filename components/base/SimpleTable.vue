@@ -16,6 +16,7 @@
         </tr>
         <tbody :class="$style.tbody">
             <slot name="rows" />
+            <slot />
         </tbody>
     </table>
 </template>
@@ -49,7 +50,7 @@ export default class SimpleTable extends Vue {
     @Prop({
         type: Array as () => string[] | undefined,
     })
-    readonly tableRows?: string;
+    readonly tableRows?: string[];
 }
 </script>
 <style lang="less" module>
@@ -64,7 +65,7 @@ export default class SimpleTable extends Vue {
 .tbody {
     tr {
         &:hover {
-            background-color: var( --gm-colors-black-alpha-20);
+            background-color: var(--gm-colors-black-alpha-20);
         }
 
         td {

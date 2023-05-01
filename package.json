@@ -21,6 +21,8 @@
     "@nuxtjs/dayjs": "^1.4.1",
     "@nuxtjs/style-resources": "^1.2.1",
     "@pinia/nuxt": "0.2.1",
+    "@vuelidate/core": "^2.0.2",
+    "@vuelidate/validators": "^2.0.2",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.3",
     "bootstrap-vue": "^2.23.1",

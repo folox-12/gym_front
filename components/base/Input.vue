@@ -4,7 +4,6 @@
         :class="[
             {
                 [`gm-input--${variant}`]: variant,
-                'gm-input--faded': faded,
                 'gm-input--invalid': invalid,
                 'gm-input--focused': focused,
             },
@@ -70,7 +69,6 @@ enum InputField {
 
 enum InputVariant {
     DEFAULT = 'default',
-    FADED = 'faded',
 }
 
 @Component({
@@ -144,18 +142,6 @@ export default class Input extends Vue {
     readonly value!: string | number | null;
 
     @Prop({
-        type: Number,
-        default: undefined,
-    })
-    readonly minValue?: number;
-
-    @Prop({
-        type: Number,
-        default: undefined,
-    })
-    readonly maxValue?: number;
-
-    @Prop({
         type: Boolean,
         default: false,
     })
@@ -166,18 +152,6 @@ export default class Input extends Vue {
         default: '',
     })
     readonly mask!: string | any[];
-
-    @Prop({
-        type: Boolean,
-        default: false,
-    })
-    readonly faded?: boolean;
-
-    @Prop({
-        type: Boolean,
-        default: false,
-    })
-    readonly large!: boolean;
 
     @Prop({
         type: String,
@@ -231,8 +205,6 @@ export default class Input extends Vue {
 
     @Watch('value')
     watchValue(value: Input['value']) {
-        // small hack dueo to v-mask cant update itself if
-        // symbols length is equal
         if (
             this.mask && this.mask !== ''
             && this.newValue?.toString().length !== value?.toString().length
@@ -263,29 +235,7 @@ export default class Input extends Vue {
     }
 
     updateValue(value: string) {
-        if (
-            this.maxValue === undefined
-            && this.minValue === undefined
-        ) {
-            this.computedValue = value;
-            return;
-        }
-
-        const numberValue = Number(value);
-
-        if (
-            this.minValue !== undefined
-            && (Number.isNaN(numberValue) || numberValue < this.minValue)
-        ) {
-            this.computedValue = Number(this.minValue);
-        } else if (
-            this.maxValue !== undefined
-            && (Number.isNaN(numberValue) || numberValue > this.maxValue)
-        ) {
-            this.computedValue = Number(this.maxValue);
-        } else {
-            this.computedValue = numberValue;
-        }
+        this.computedValue = value;
     }
 
     @Emit('focus')
@@ -325,6 +275,7 @@ export default class Input extends Vue {
         font-size: 16px;
         transition: border-color .25s ease, box-shadow .25s ease;
         background-origin: border-box;
+        outline: none;
 
         &[disabled] {
             cursor: default;
@@ -347,6 +298,8 @@ export default class Input extends Vue {
 
     textarea {
         resize: vertical;
+        min-height: 40px;
+        max-height: 200px;
     }
 
     &__icon {
@@ -371,12 +324,6 @@ export default class Input extends Vue {
         input, textarea {
             border-color: var(--gm-colors-error)!important;
             box-shadow: 0 0 0 4px var(--gm-shadow-general-box);
-        }
-    }
-
-    &--faded {
-        input, textarea {
-            box-shadow: none!important;
         }
     }
 }

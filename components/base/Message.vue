@@ -1,9 +1,12 @@
 <template>
-    <div 
-    class="gm-message"
-    :class="messageClasses"
+    <div
+        class="gm-message"
+        :class="messageClasses"
     >
-        <base-container>
+        <base-text v-if="value" class="gm-message--text" as="div">
+            {{ value }}
+        </base-text>
+        <base-container v-else>
             <slot/>
         </base-container>
     </div>
@@ -34,6 +37,10 @@ export default class Message extends Vue {
         default: MessageType.DEFAULT,
     }) readonly type?: MessageType;
 
+    @Prop({
+        type: String,
+    }) readonly value?: string;
+
     get messageClasses() {
         return {
             [`gm-message--${this.type}`]: this.type,
@@ -44,6 +51,10 @@ export default class Message extends Vue {
 <style lang="less">
     .gm-message {
         padding-block: 20px;
+
+        &--text {
+            padding-inline: 5px;
+        }
 
         &--warning {
             background-color: var(--gm-main-warning-background-color);

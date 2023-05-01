@@ -31,15 +31,13 @@ module.exports = {
                 tsx: 'never',
             },
         ],
-        'import/no-cycle': false,
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
         'no-shadow': 'off',
         '@typescript-eslint/no-shadow': ['error'],
-        'no-unused-vars': 'off', // for ENUMS errors (created but never used)
-        '@typescript-eslint/no-unused-vars': 'error', // for ENUMS errors (created but never used)
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': 'error',
         'no-dupe-class-members': 'off',
-        'vue/comment-directive': 'error', // plugin:vue/recommended
-        'vue/jsx-uses-vars': 'error', // plugin:vue/recommended
+        'vue/comment-directive': 'error',
         'vue/no-multiple-template-root': false,
         "vue/multi-word-component-names": ["error", {
             "ignores": ["default", "home"]

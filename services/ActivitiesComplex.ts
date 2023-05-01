@@ -37,6 +37,28 @@ class ActivitiesComplex extends APIService {
         return data;
     }
 
+    async updateActivityComplex(form: ActivitiesComplexWithActivities) {
+        const data = request<boolean>(() =>
+            this.$axios.$post<boolean>(
+                `${API_URL}/activities-complex/`,
+                {form,id:null}
+            )
+        );
+
+        return data;
+    }
+
+    async createActivityComplex(form: ActivitiesComplexWithActivities) {
+        const data = request<boolean>(() =>
+            this.$axios.$post<boolean>(
+                `${API_URL}/activities-complex/new/`,
+                {form}
+            )
+        );
+
+        return data;
+    }
+
     async isUserAuthor(id: string | number) {
         const data = request<boolean>(() =>
             this.$axios.$get<boolean>(

@@ -10,6 +10,8 @@ interface State {
     defaultFilters: FiltersTypes;
     currentActivity: NetworkData<ActivitiesComplexWithActivities>;
     isDeleted: NetworkData<boolean>;
+    isUpdated: NetworkData<boolean>;
+    isCreated: NetworkData<boolean>;
 }
 
 export const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexWithActivities = {
@@ -48,6 +50,18 @@ export const useActivitiesComplex = defineStore("activitiesComplex", {
             data: null,
             error: null,
         },
+
+        isUpdated: {
+            loading: false,
+            data: null,
+            error: null,
+        },
+
+        isCreated: {
+            loading: false,
+            data: null,
+            error: null,
+        },
     }),
 
     getters: {
@@ -82,6 +96,18 @@ export const useActivitiesComplex = defineStore("activitiesComplex", {
         async isUserAuthorFetch(id: string | number) {
             const result = await $services.complex.isUserAuthor(id);
             return result;
+        },
+
+        async updateActivitiesComplex(form: ActivitiesComplexWithActivities) {
+            this.isUpdated.loading=true;
+            const { data, error }= await $services.complex.updateActivityComplex(form);
+            this.isUpdated= { data, error, loading: false};
+        },
+
+        async createActivitiesComplex(form: ActivitiesComplexWithActivities) {
+            this.isCreated.loading =true;
+            const { data, error }= await $services.complex.createActivityComplex(form);
+            this.isCreated = { data, error, loading: false};
         },
 
 

@@ -10,7 +10,22 @@
                 а затем перезайдите в систему.
             </base-text>
         </base-message>
-        <gym-title> Выбор спортивной программы </gym-title>
+        <gym-title>
+            <template #default>
+                Выбор спортивной программы
+            </template>
+
+            <template #buttons>
+                <div class="d-flex">
+                    <base-button
+                        v-if="$auth.user?.isActivated"
+                        @click="routeToNewPage"
+                    >
+                        Создать
+                    </base-button>
+                </div>
+            </template>
+             </gym-title>
         <filters
             :fetchData="getAllActivities"
             :default-filters="defaultFilters"
@@ -67,7 +82,7 @@ import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
 import { useSubscription } from "~/pinia-store/SubscriptionStore";
 import Filters from "~/components/Filters.vue";
 import Paggination from "~/components/paggination.vue";
-import { BaseCard } from "~/components/base";
+import { BaseCard, BaseButton } from "~/components/base";
 import CardContainer from "~/components/CardContainer.vue";
 import CardActivitiesComplex from "~/components/CardActivitiesComplex.vue";
 import { getFullNameFromNameAndSurname } from "~/utils/general";
@@ -101,6 +116,7 @@ Component.registerHooks(["head"]);
         Filters,
         Paggination,
         BaseCard,
+        BaseButton,
         CardContainer,
         CardActivitiesComplex,
     },
@@ -119,6 +135,10 @@ export default class homePage extends Mappers {
    isComplexesInSubscription(id?: string | number) {
         if (!id) return;
         return (this.subscribedComplexesId.data || []).includes(id) ;
+    }
+
+    routeToNewPage() {
+        this.$router.push('/tranings/new/')
     }
 
     async subscribe(id?: string | number) {

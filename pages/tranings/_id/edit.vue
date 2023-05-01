@@ -1,5 +1,17 @@
 <template>
-    <div :class="$style.currentTraning">
+    <div>
+        <modal
+            v-if="showConfirmModal"
+            :loading="isDeleted.loading"
+            @close="() => (showConfirmModal = false)"
+            @confirm="deleleteCurrentActivity"
+        >
+            <template #header>
+                <base-text color="normal" weight="bold" size="xl">
+                    Вы действительно хотите удалить программу?
+                </base-text>
+            </template>
+        </modal>
         <base-container>
             <nuxt-link to="/tranings/">
                 {{ "<< Вернуться" }}
@@ -21,10 +33,9 @@
                     </div>
                 </div>
             </template>
-
         </gym-title>
         <traning-form-edit
-            :activity="currentTraningsInformation"
+            ref="traningFormEdit"
             :loading="currentActivity.loading"
             :showButton="$auth.loggedIn"
             @edit="edit"
@@ -32,35 +43,43 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
+import { Vue, Component, Mixins, Ref } from "vue-property-decorator";
 import getCurrentId from "~/components/mixins/getCurrentId";
 import GymTitle from "~/components/Title.vue";
 import { mapState, mapActions } from "pinia";
 import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
 import { useSubscription } from "~/pinia-store/SubscriptionStore";
-import { BaseContainer, BaseText, BaseButton, BaseIcon } from "~/components/base";
+import { useActivitiesComplexForm } from "~/pinia-store/useActivitiesComplexForm";
+import {
+    BaseContainer,
+    BaseText,
+    BaseButton,
+    BaseIcon,
+} from "~/components/base";
 import TraningFormEdit from "~/components/tranings/TraningFormEdit.vue";
 import { mdiDelete, mdiCreditCard } from "@mdi/js";
-import isUserAuthorComplex from "~/middleware/isUserAuthorComplex"
-import authorizated from "~/middleware/auth"
+import isUserAuthorComplex from "~/middleware/isUserAuthorComplex";
+import authorizated from "~/middleware/auth";
+import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
 
 const Mappers = Vue.extend({
     computed: {
-        ...mapState(useActivitiesComplex, ["currentActivity"]),
-        ...mapState(useSubscription, [
-            'isSubscribed'
-        ]),
+        ...mapState(useActivitiesComplex, ["currentActivity", "isDeleted", "isUpdated"]),
+        ...mapState(useSubscription, ["isSubscribed"]),
+        ...mapState(useActivitiesComplexForm, ["activitiesComplexForm"])
     },
 
     methods: {
         ...mapActions(useActivitiesComplex, [
             "getCurrentActivity",
             "resetCurrentActivityForm",
+            "deleteActivity",
+            "updateActivitiesComplex",
         ]),
 
-        ...mapActions(useSubscription, [
-            'subscribeToComplex'
-        ]),
+        ...mapActions(useSubscription, ["subscribeToComplex"]),
+
+        ...mapActions(useActivitiesComplexForm, ["updateForm"]),
     },
 });
 
@@ -74,9 +93,13 @@ const Mappers = Vue.extend({
         BaseIcon,
     },
 
-    middleware: [authorizated, isUserAuthorComplex]
+    middleware: [authorizated, isUserAuthorComplex],
 })
 export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
+    @Ref() readonly traningFormEdit!: typeof TraningFormEdit;
+
+    showConfirmModal: boolean = false;
+
     get header() {
         return `Редактирование программы №${this.currentId}`;
     }
@@ -111,8 +134,27 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         };
     }
 
-    deleleteCurrentActivity() {
-        alert("delete")
+    async deleleteCurrentActivity() {
+        await this.deleteActivity(this.currentId);
+
+        if (this.isDeleted.error) {
+            this.$notify({
+                group: "server-response",
+                type: "error",
+                title: "Ошибка",
+                text: this.isDeleted.error,
+            });
+        } else {
+            this.$notify({
+                group: "server-response",
+                type: "success",
+                title: "Успешно",
+                text: "Комплекс удален",
+            });
+
+            this.showConfirmModal = false;
+            this.$router.push("/tranings/");
+        }
     }
 
     routeToSimple() {
@@ -120,7 +162,41 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     }
 
     async edit() {
-        alert('edit')
+        const { isValid } = this.traningFormEdit.validateForm();
+        if (!isValid) {
+            this.$notify({
+                group: "server-response",
+                type: "error",
+                title: "Ошибка",
+                text: 'Проверьте правильность ввода данных',
+            });
+
+            return;
+        }
+
+        await this.updateActivitiesComplex(this.activitiesComplexForm as ActivitiesComplexWithActivities)
+
+        if(this.isUpdated.error) {
+            this.$notify({
+                group: "server-response",
+                type: "error",
+                title: "Ошибка",
+                text: 'Ошибка обновления',
+            });
+
+            return;
+
+        } else {
+            this.$notify({
+                group: "server-response",
+                type: "success",
+                title: "Успешно",
+                text: 'Изменения успешно сохранены',
+            });
+
+        }
+
+
     }
     head() {
         return {
@@ -133,10 +209,12 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     }
     async fetch() {
         await this.getCurrentActivity(this.currentId);
+
+
+        this.updateForm({
+            ...this.currentTraningsInformation,
+                date_creation : new Date(this.currentTraningsInformation!.date_creation!),
+             });
     }
 }
 </script>
-<style lang="less" module>
-.current-traning {
-}
-</style>

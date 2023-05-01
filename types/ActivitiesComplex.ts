@@ -6,7 +6,7 @@ export interface ActivitiesComplexType {
     id_author: number | null;
     title: string | null;
     description: string | null;
-    date_creation: Date | null;
+    date_creation: string | null;
     rating: number | null;
     author?: UserAsAuthor;
 }
