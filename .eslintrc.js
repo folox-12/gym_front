@@ -12,7 +12,7 @@ module.exports = {
     plugins: [
     ],
     parserOptions: {
-        "ecmaVersion": 2021
+        ecmaVersion: 2021,
     },
     // add your custom rules here
     rules: {
@@ -38,10 +38,10 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 'error',
         'no-dupe-class-members': 'off',
         'vue/comment-directive': 'error',
-        'vue/no-multiple-template-root': false,
-        "vue/multi-word-component-names": ["error", {
-            "ignores": ["default", "home"]
-            }]
+        'vue/no-multiple-template-root': 0,
+        'vue/multi-word-component-names': ['error', {
+            ignores: ['default', 'home', 'new', 'edit', 'index'],
+        }],
     },
     settings: {
         'import/resolver': {

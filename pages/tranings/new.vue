@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <modal
@@ -19,47 +18,49 @@
             </nuxt-link>
         </base-container>
         <gym-title>
-            <template #default>Новый комплекс упражнений</template>
+            <template #default>
+                Новый комплекс упражнений
+            </template>
         </gym-title>
         <traning-form-edit
             ref="traningFormEdit"
             :loading="currentActivity.loading"
-            :showButton="$auth.loggedIn"
+            :show-button="$auth.loggedIn"
             @edit="edit"
         />
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Mixins, Ref } from "vue-property-decorator";
-import GymTitle from "~/components/Title.vue";
-import { mapState, mapActions } from "pinia";
-import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
-import { useSubscription } from "~/pinia-store/SubscriptionStore";
-import { useActivitiesComplexForm } from "~/pinia-store/useActivitiesComplexForm";
+import {
+    Vue, Component, Mixins, Ref,
+} from 'vue-property-decorator';
+import GymTitle from '~/components/Title.vue';
+import { mapState, mapActions } from 'pinia';
+import { useActivitiesComplex } from '~/pinia-store/ActivitiesComplexStore';
+import { useActivitiesComplexForm } from '~/pinia-store/useActivitiesComplexForm';
 import {
     BaseContainer,
     BaseText,
     BaseButton,
     BaseIcon,
-} from "~/components/base";
-import TraningFormEdit from "~/components/tranings/TraningFormEdit.vue";
-import authorizated from "~/middleware/auth";
-import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
+} from '~/components/base';
+import TraningFormEdit from '~/components/tranings/TraningFormEdit.vue';
+import authorizated from '~/middleware/auth';
+import { ActivitiesComplexWithActivities } from '~/types/ActivitiesComplex';
 
 const Mappers = Vue.extend({
     computed: {
-        ...mapState(useActivitiesComplex, ["currentActivity", "isDeleted"]),
-        ...mapState(useSubscription, ["isSubscribed"]),
-        ...mapState(useActivitiesComplexForm, ["activitiesComplexForm"])
+        ...mapState(useActivitiesComplex, ['currentActivity', 'isCreated']),
+        ...mapState(useActivitiesComplexForm, ['activitiesComplexForm']),
     },
 
     methods: {
         ...mapActions(useActivitiesComplex, [
-            "resetCurrentActivityForm",
-            "createActivitiesComplex",
+            'resetCurrentActivityForm',
+            'createActivitiesComplex',
         ]),
 
-        ...mapActions(useActivitiesComplexForm, ["updateForm"]),
+        ...mapActions(useActivitiesComplexForm, ['updateForm']),
     },
 });
 
@@ -78,8 +79,9 @@ const Mappers = Vue.extend({
 export default class CurrentTranings extends Mixins(Mappers) {
     @Ref() readonly traningFormEdit!: typeof TraningFormEdit;
 
-    showConfirmModal: boolean = false;
+    showConfirmModal = false;
 
+    // eslint-disable-next-line class-methods-use-this
     get header() {
         return 'Создание нового комплекса упражнения';
     }
@@ -88,20 +90,38 @@ export default class CurrentTranings extends Mixins(Mappers) {
         const { isValid } = this.traningFormEdit.validateForm();
         if (!isValid) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
-                text: 'Проверьте правильность ввода данных'
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
+                text: 'Проверьте правильность ввода данных',
             });
 
             return;
         }
         const newForm = {
             ...this.activitiesComplexForm,
-            date_creation: this.$dayjs(new Date()).format("YYYY-MM-DD")
+            date_creation: this.$dayjs(new Date()).format('YYYY-MM-DD'),
         };
-        this.createActivitiesComplex(newForm as ActivitiesComplexWithActivities)
+        this.createActivitiesComplex(newForm as ActivitiesComplexWithActivities);
+        if (this.isCreated.error) {
+            this.$notify({
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
+                text: 'Ошибка при создании',
+            });
+            return;
+        }
+        this.$notify({
+            group: 'server-response',
+            type: 'success',
+            title: 'Успешно',
+            text: 'Комплекс создан',
+        });
+
+        this.$router.push('/tranings/');
     }
+
     head() {
         return {
             title: this.header,
@@ -113,8 +133,7 @@ export default class CurrentTranings extends Mixins(Mappers) {
     }
 
     created() {
-        this.updateForm({ date_creation: new Date()})
+        this.updateForm({ date_creation: new Date() });
     }
-
 }
 </script>

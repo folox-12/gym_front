@@ -41,7 +41,7 @@ class ActivitiesComplex extends APIService {
         const data = request<boolean>(() =>
             this.$axios.$post<boolean>(
                 `${API_URL}/activities-complex/`,
-                {form,id:null}
+                 { form }
             )
         );
 

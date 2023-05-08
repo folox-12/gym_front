@@ -2,29 +2,39 @@
     <header :class="$style.header">
         <base-container>
             <nav>
-                <div :class="$style.icon"
+                <div
+                    :class="$style.icon"
                     @click="$router.push('/')"
                 >
                     <img src="~/static/img/mainLogo.png">
                 </div>
-                <ul>
-                    <li v-for="(item, index) in navigationsElements" :key="index" >
-                        <nuxt-link class="nuxt-link"  v-if="item.show"
-                        :to="item.to"
+                <ul
+                    :class="$style.desktopMenu"
+                >
+                    <li v-for="(item, index) in navigationsElements" :key="index">
+                        <nuxt-link
+                            v-if="item.show"
+                            class="nuxt-link"
+                            :to="item.to"
                         >
-                            {{item.name}}
-                        </nuxt-link>
-                    </li>
-                    <li>
-                        <nuxt-link class="nuxt-link"  v-if="$auth.loggedIn"
-                            to="/profile/"
-                        >
-                            Личный кабинет
+                            {{ item.name }}
                         </nuxt-link>
                     </li>
                 </ul>
+                <base-button
+                    variant="unstyle"
+                    :class="$style.burger"
+                    @click="openMobileMenu"
+                >
+                    <base-icon
+                        width="48"
+                        height="48"
+                        :path="iconsMenu"
+                    />
+                </base-button>
                 <div
-                :class="$style.buttons">
+                    :class="$style.buttons"
+                >
                     <base-button
                         v-if="!$auth.loggedIn"
                         :text="$t('general.signIn')"
@@ -38,19 +48,19 @@
                             v-if="$auth.user.email && !$auth.user.name"
                             color="light"
                         >
-                        {{ $auth.user.email }}
+                            {{ $auth.user.email }}
                         </base-text>
                         <base-text
                             v-if="$auth.user.name"
                             color="light"
                         >
-                            {{$auth.user.name}}
+                            {{ $auth.user.name }}
                         </base-text>
                         <base-text
                             v-if="$auth.user.surname && $auth.user.name"
                             color="light"
                         >
-                            {{$auth.user.surname}}
+                            {{ $auth.user.surname }}
                         </base-text>
                         <base-button
                             text="Выйти"
@@ -59,45 +69,71 @@
                     </div>
                 </div>
             </nav>
+            <mobile-header
+                ref="mobileHeader"
+                :elements="navigationsElements"
+            />
         </base-container>
     </header>
 </template>
 
 <script lang="ts">
-
-import { Vue, Component } from 'vue-property-decorator';
-import { BaseContainer, BaseButton, BaseText } from '~/components/base/'
+import { Vue, Component, Ref } from 'vue-property-decorator';
+import { mdiMenu } from '@mdi/js';
+import { BaseContainer, BaseButton, BaseText } from '~/components/base/';
+import MobileHeader from '~/components/MobileHeader.vue';
 
 @Component({
     components: {
         BaseContainer,
         BaseButton,
         BaseText,
-    }
+        MobileHeader,
+    },
 })
 export default class StickyHeader extends Vue {
+    @Ref('mobileHeader') mobileHeader!: typeof MobileHeader;
+
+    iconsMenu = mdiMenu;
+
     navigationsElements = [
         {
             name: 'Главная',
-            to: "/",
+            to: '/',
             show: false,
         },
         {
-            name: "Программы тренировок",
-            to: "/tranings",
+            name: 'Программы тренировок',
+            to: '/tranings/',
             show: true,
         },
+        {
+            name: 'Личный кабинет',
+            to: '/profile/',
+            show: this.$auth.loggedIn,
+        },
     ];
+
+    openMobileMenu() {
+        this.mobileHeader.isOpen = true;
+    }
+
     logout() {
         this.$auth.logout();
     }
+
     routeToAuthPage() {
-        this.$router.push('/auth')
+        this.$router.push('/auth');
     }
 }
 
 </script>
 <style lang="less" module>
+.desktop-menu {}
+.burger {
+    display: none;
+}
+
 .header {
     position: sticky;
     width: 100%;
@@ -141,5 +177,28 @@ export default class StickyHeader extends Vue {
 .logged {
     display: flex;
     gap:10px;
+}
+
+@media screen and (max-width: @lg) {
+    .header {
+        nav {
+            justify-content: space-between;
+            grid-template-columns: 1fr auto;
+        }
+    }
+    .desktop-menu {
+        display: none !important;
+    }
+
+    .buttons {
+        &:not(.burger) {
+            display: none !important;
+        }
+    }
+
+    .burger {
+        display: block;
+    }
+
 }
 </style>

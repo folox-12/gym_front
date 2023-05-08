@@ -31,11 +31,11 @@ export default {
         '@/assets/style/main.less',
     ],
     styleResources: {
-            less: [
-                '~/assets/style/variables.less',
-                '~/assets/style/less-mixin.less',
-            ],
-        },
+        less: [
+            '~/assets/style/variables.less',
+            '~/assets/style/less-mixin.less',
+        ],
+    },
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
@@ -45,6 +45,7 @@ export default {
         { src: '@/plugins/notification.js' },
         { src: '@/plugins/serviceAccessor.ts' },
         { src: '@/plugins/vselect.js' },
+        { src: '@/plugins/portal-vue.js' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -54,7 +55,7 @@ export default {
     buildModules: [
     // https://go.nuxtjs.dev/typescript
         '@nuxt/typescript-build',
-        ['@pinia/nuxt', { disableVuex: false}],
+        ['@pinia/nuxt', { disableVuex: false }],
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules

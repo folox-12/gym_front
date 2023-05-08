@@ -1,11 +1,11 @@
 <template>
     <div :class="$style.container">
-        <slot> </slot>
+        <slot />
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { BaseContainer } from "~/components/base/";
+import { Vue, Component } from 'vue-property-decorator';
+import { BaseContainer } from '~/components/base/';
 
 @Component({
     components: {

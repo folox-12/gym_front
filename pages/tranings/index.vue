@@ -16,18 +16,16 @@
             </template>
 
             <template #buttons>
-                <div class="d-flex">
-                    <base-button
-                        v-if="$auth.user?.isActivated"
-                        @click="routeToNewPage"
-                    >
-                        Создать
-                    </base-button>
-                </div>
+                <base-button
+                    v-if="$auth.user?.isActivated"
+                    @click="routeToNewPage"
+                >
+                    Создать
+                </base-button>
             </template>
-             </gym-title>
+        </gym-title>
         <filters
-            :fetchData="getAllActivities"
+            :fetch-data="getAllActivities"
             :default-filters="defaultFilters"
             :loading="activities.loading"
             :total="totalActivities"
@@ -45,15 +43,16 @@
                             :key="index"
                             :title="activity.title"
                             :description="activity.description"
-                            :authorName="
+                            :author-name="
                                 getFullName(
                                     activity.author?.name,
                                     activity.author?.surname
                                 )
                             "
-                            :authorEmail="activity.author?.email"
+                            :author-email="activity.author?.email"
                             :date-creation="activity.date_creation"
-                            :is-subscribed="isComplexesInSubscription(activity.id_activities_complex)"
+                            :is-subscribed="
+                                isComplexesInSubscription(activity.id_activities_complex)"
                             @subscribeToComplex="
                                 subscribe(activity.id_activities_complex)
                             "
@@ -75,42 +74,42 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import GymTitle from "~/components/Title.vue";
-import { mapActions, mapState } from "pinia";
-import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
-import { useSubscription } from "~/pinia-store/SubscriptionStore";
-import Filters from "~/components/Filters.vue";
-import Paggination from "~/components/paggination.vue";
-import { BaseCard, BaseButton } from "~/components/base";
-import CardContainer from "~/components/CardContainer.vue";
-import CardActivitiesComplex from "~/components/CardActivitiesComplex.vue";
-import { getFullNameFromNameAndSurname } from "~/utils/general";
-import fetchSubscription from "~/middleware/fetchSubscribedIds";
+import { Vue, Component } from 'vue-property-decorator';
+import GymTitle from '~/components/Title.vue';
+import { mapActions, mapState } from 'pinia';
+import { useActivitiesComplex } from '~/pinia-store/ActivitiesComplexStore';
+import { useSubscription } from '~/pinia-store/SubscriptionStore';
+import Filters from '~/components/Filters.vue';
+import Paggination from '~/components/paggination.vue';
+import { BaseCard, BaseButton } from '~/components/base';
+import CardContainer from '~/components/CardContainer.vue';
+import CardActivitiesComplex from '~/components/CardActivitiesComplex.vue';
+import { getFullNameFromNameAndSurname } from '~/utils/general';
+import fetchSubscription from '~/middleware/fetchSubscribedIds';
 
 const Mappers = Vue.extend({
     computed: {
         ...mapState(useActivitiesComplex, [
-            "activities",
-            "defaultFilters",
-            "totalActivities",
+            'activities',
+            'defaultFilters',
+            'totalActivities',
         ]),
 
-        ...mapState(useSubscription, ["isSubscribed", "subscribedComplexesId", "isUnsubscribed"]),
+        ...mapState(useSubscription, ['isSubscribed', 'subscribedComplexesId', 'isUnsubscribed']),
     },
 
     methods: {
-        ...mapActions(useActivitiesComplex, ["getAllActivities"]),
+        ...mapActions(useActivitiesComplex, ['getAllActivities']),
 
-        ...mapActions(useSubscription, ["subscribeToComplex", "unsubscribeFromComplex", "fetchSubscribedComplexesId"]),
+        ...mapActions(useSubscription, ['subscribeToComplex', 'unsubscribeFromComplex', 'fetchSubscribedComplexesId']),
     },
 
     middleware: [fetchSubscription],
 
 });
-Component.registerHooks(["head"]);
+Component.registerHooks(['head']);
 @Component({
-    name: "traningPage",
+    name: 'traningPage',
     components: {
         GymTitle,
         Filters,
@@ -122,71 +121,74 @@ Component.registerHooks(["head"]);
     },
 })
 export default class homePage extends Mappers {
-    header = "Список программ - fitno";
-
-    getFullName(name: string | undefined, surname: string | undefined) {
-        return getFullNameFromNameAndSurname(name, surname);
-    }
+    header = 'Список программ - fitno';
 
     get allActivities() {
         return this.activities.data || [];
     }
 
-   isComplexesInSubscription(id?: string | number) {
-        if (!id) return;
-        return (this.subscribedComplexesId.data || []).includes(id) ;
+    // eslint-disable-next-line class-methods-use-this
+    getFullName(name: string | undefined, surname: string | undefined) {
+        return getFullNameFromNameAndSurname(name, surname);
+    }
+
+    isComplexesInSubscription(id?: string | number): boolean {
+        if (id) {
+            return (this.subscribedComplexesId.data || []).includes(id);
+        }
+        return false;
     }
 
     routeToNewPage() {
-        this.$router.push('/tranings/new/')
+        this.$router.push('/tranings/new/');
     }
 
     async subscribe(id?: string | number) {
-        if(!id) return;
+        if (!id) return;
         await this.subscribeToComplex(id);
         if (this.isSubscribed.error) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: this.isSubscribed.error,
             });
         } else {
             this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
-                text: 'Вы подписались на программу!'
+                group: 'server-response',
+                type: 'success',
+                title: 'Успешно',
+                text: 'Вы подписались на программу!',
             });
 
-            await this.fetchSubscribedComplexesId()
+            await this.fetchSubscribedComplexesId();
         }
     }
 
     async unsubscribe(id?: string | number) {
-        if(!id) return;
+        if (!id) return;
         await this.unsubscribeFromComplex(id);
         if (this.isUnsubscribed.error) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: this.isUnsubscribed.error,
             });
         } else {
             this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
-                text: 'Отписка от комплекcа упражнений удалась!'
+                group: 'server-response',
+                type: 'success',
+                title: 'Успешно',
+                text: 'Отписка от комплекcа упражнений удалась!',
             });
         }
 
-        await this.fetchSubscribedComplexesId()
+        await this.fetchSubscribedComplexesId();
     }
 
     routeToComplex(id?: string | number) {
-        if (!id) return
+        if (!id) return;
         this.$router.push(`/tranings/${id}`);
     }
 

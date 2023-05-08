@@ -1,6 +1,6 @@
 import { API_URL, request } from "./generic.services";
 import APIService from "./ApiService";
-import { ActivityType } from "~/types/Activity";
+import { ActivityToSendType, ActivityType } from "~/types/Activity";
 
 class Activity extends APIService {
     async fetchAllActivity() {
@@ -9,7 +9,16 @@ class Activity extends APIService {
                 `${API_URL}/activities`,
             )
         );
+        return data;
+    }
 
+    async createNewActivity(activity: ActivityToSendType) {
+        const data = request<number>(() =>
+            this.$axios.$post<number>(
+                `${API_URL}/activities/new`,
+                 { activity }
+            )
+        );
         return data;
     }
 }

@@ -18,7 +18,9 @@
             </nuxt-link>
         </base-container>
         <gym-title>
-            <template #default>{{ currentTraningsInformation.title }}</template>
+            <template #default>
+                {{ currentTraningsInformation.title }}
+            </template>
             <template #buttons>
                 <div class="d-flex">
                     <div v-for="(icon, index) of icons" :key="index">
@@ -37,49 +39,51 @@
         <traning-form-edit
             ref="traningFormEdit"
             :loading="currentActivity.loading"
-            :showButton="$auth.loggedIn"
+            :show-button="$auth.loggedIn"
             @edit="edit"
         />
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Mixins, Ref } from "vue-property-decorator";
-import getCurrentId from "~/components/mixins/getCurrentId";
-import GymTitle from "~/components/Title.vue";
-import { mapState, mapActions } from "pinia";
-import { useActivitiesComplex } from "~/pinia-store/ActivitiesComplexStore";
-import { useSubscription } from "~/pinia-store/SubscriptionStore";
-import { useActivitiesComplexForm } from "~/pinia-store/useActivitiesComplexForm";
+import {
+    Vue, Component, Mixins, Ref,
+} from 'vue-property-decorator';
+import getCurrentId from '~/components/mixins/getCurrentId';
+import GymTitle from '~/components/Title.vue';
+import { mapState, mapActions } from 'pinia';
+import { useActivitiesComplex } from '~/pinia-store/ActivitiesComplexStore';
+import { useSubscription } from '~/pinia-store/SubscriptionStore';
+import { useActivitiesComplexForm } from '~/pinia-store/useActivitiesComplexForm';
 import {
     BaseContainer,
     BaseText,
     BaseButton,
     BaseIcon,
-} from "~/components/base";
-import TraningFormEdit from "~/components/tranings/TraningFormEdit.vue";
-import { mdiDelete, mdiCreditCard } from "@mdi/js";
-import isUserAuthorComplex from "~/middleware/isUserAuthorComplex";
-import authorizated from "~/middleware/auth";
-import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
+} from '~/components/base';
+import TraningFormEdit from '~/components/tranings/TraningFormEdit.vue';
+import { mdiDelete, mdiCreditCard } from '@mdi/js';
+import isUserAuthorComplex from '~/middleware/isUserAuthorComplex';
+import authorizated from '~/middleware/auth';
+import { ActivitiesComplexWithActivities } from '~/types/ActivitiesComplex';
 
 const Mappers = Vue.extend({
     computed: {
-        ...mapState(useActivitiesComplex, ["currentActivity", "isDeleted", "isUpdated"]),
-        ...mapState(useSubscription, ["isSubscribed"]),
-        ...mapState(useActivitiesComplexForm, ["activitiesComplexForm"])
+        ...mapState(useActivitiesComplex, ['currentActivity', 'isDeleted', 'isUpdated']),
+        ...mapState(useSubscription, ['isSubscribed']),
+        ...mapState(useActivitiesComplexForm, ['activitiesComplexForm']),
     },
 
     methods: {
         ...mapActions(useActivitiesComplex, [
-            "getCurrentActivity",
-            "resetCurrentActivityForm",
-            "deleteActivity",
-            "updateActivitiesComplex",
+            'getCurrentActivity',
+            'resetCurrentActivityForm',
+            'deleteActivity',
+            'updateActivitiesComplex',
         ]),
 
-        ...mapActions(useSubscription, ["subscribeToComplex"]),
+        ...mapActions(useSubscription, ['subscribeToComplex']),
 
-        ...mapActions(useActivitiesComplexForm, ["updateForm"]),
+        ...mapActions(useActivitiesComplexForm, ['updateForm']),
     },
 });
 
@@ -98,7 +102,7 @@ const Mappers = Vue.extend({
 export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     @Ref() readonly traningFormEdit!: typeof TraningFormEdit;
 
-    showConfirmModal: boolean = false;
+    showConfirmModal = false;
 
     get header() {
         return `Редактирование программы №${this.currentId}`;
@@ -118,16 +122,16 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         return {
             iconEdit: {
                 icon: mdiCreditCard,
-                color: "basic",
-                title: "Вернуться на страницу карточки",
+                color: 'basic',
+                title: 'Вернуться на страницу карточки',
                 action: this.routeToSimple,
                 show: this.isUserAuthor,
             },
 
             iconDelete: {
                 icon: mdiDelete,
-                color: "danger",
-                title: "Удалить",
+                color: 'danger',
+                title: 'Удалить',
                 action: this.deleleteCurrentActivity,
                 show: this.isUserAuthor,
             },
@@ -139,21 +143,21 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
 
         if (this.isDeleted.error) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: this.isDeleted.error,
             });
         } else {
             this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
-                text: "Комплекс удален",
+                group: 'server-response',
+                type: 'success',
+                title: 'Успешно',
+                text: 'Комплекс удален',
             });
 
             this.showConfirmModal = false;
-            this.$router.push("/tranings/");
+            this.$router.push('/tranings/');
         }
     }
 
@@ -165,39 +169,38 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         const { isValid } = this.traningFormEdit.validateForm();
         if (!isValid) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: 'Проверьте правильность ввода данных',
             });
 
             return;
         }
 
-        await this.updateActivitiesComplex(this.activitiesComplexForm as ActivitiesComplexWithActivities)
+        await this.updateActivitiesComplex(
+            this.activitiesComplexForm as ActivitiesComplexWithActivities,
+        );
 
-        if(this.isUpdated.error) {
+        if (this.isUpdated.error) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: 'Ошибка обновления',
             });
-
-            return;
-
         } else {
             this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
+                group: 'server-response',
+                type: 'success',
+                title: 'Успешно',
                 text: 'Изменения успешно сохранены',
             });
 
+            this.routeToSimple();
         }
-
-
     }
+
     head() {
         return {
             title: this.header,
@@ -207,14 +210,14 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     beforeDestroy() {
         this.resetCurrentActivityForm();
     }
+
     async fetch() {
         await this.getCurrentActivity(this.currentId);
 
-
         this.updateForm({
             ...this.currentTraningsInformation,
-                date_creation : new Date(this.currentTraningsInformation!.date_creation!),
-             });
+            date_creation: new Date(this.currentTraningsInformation!.date_creation!),
+        });
     }
 }
 </script>

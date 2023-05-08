@@ -1,6 +1,6 @@
-import { DifficultyType } from "./Difficulty"
+import { DifficultyType } from './Difficulty';
 
-interface BodyPartType {
+export interface BodyPartType {
     id_body_part: string | number,
     code: string,
     name: string,
@@ -9,10 +9,15 @@ interface BodyPartType {
 export interface ActivityType {
     id_activity: string | number;
     name: string;
-    kilocalories: string | number;
+    kilocalories: number;
     id_difficulty?: string | number;
     id_body_part?: string | number;
     bodypart: BodyPartType;
     difficulty: DifficultyType;
-
+}
+export interface ActivityToSendType {
+    name?: string;
+    kilocalories?: number;
+    id_difficulty?: string | number;
+    id_body_part?: string | number;
 }

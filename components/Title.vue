@@ -6,7 +6,7 @@
                     <slot />
                 </base-text>
             </h1>
-            <div :class="$style.buttons">
+            <div v-if="$slots.buttons" :class="$style.buttons">
                 <slot name="buttons">
                     <base-button :class="$style.button" v-if="buttonText">
                         {{ buttonText }}
@@ -65,9 +65,11 @@ export default class GymTitle extends Vue {
     height: fit-content;
 }
 
-.buttons > div {
-    display: flex;
-    gap: 5px;
+.buttons  {
     margin-left: 10px;
+    & > div {
+        display: flex;
+        gap: 5px;
+    }
 }
 </style>

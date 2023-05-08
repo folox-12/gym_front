@@ -5,9 +5,9 @@ import {
     onMounted,
     onBeforeUnmount,
     ref,
-} from "@nuxtjs/composition-api";
-import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+} from '@nuxtjs/composition-api';
+import { useVuelidate } from '@vuelidate/core';
+import { required, maxLength, minLength } from '@vuelidate/validators';
 import {
     BaseContainer,
     BaseLoader,
@@ -17,17 +17,17 @@ import {
     BaseInput,
     BaseIcon,
     BaseMessage,
-} from "~/components/base";
-import { FormRow } from "~/components/form/";
-import Rating from "~/components/Rating.vue";
-import { getFullNameFromNameAndSurname } from "~/utils/general";
-import { useActivityStore } from "~/pinia-store/useActivityStore";
-import { storeToRefs } from "pinia";
-import { mdiDeleteForever } from "@mdi/js";
-import Modal from "~/components/Modal.vue";
-import { ActivityType } from "~/types/Activity";
-import { useActivitiesComplexForm } from "~/pinia-store/useActivitiesComplexForm";
-import AddNewActivityModal from "~/components/tranings/AddNewActivityModal.vue";
+} from '~/components/base';
+import { FormRow } from '~/components/form/';
+import Rating from '~/components/Rating.vue';
+import { getFullNameFromNameAndSurname } from '~/utils/general';
+import { useActivityStore } from '~/pinia-store/useActivityStore';
+import { storeToRefs } from 'pinia';
+import { mdiDeleteForever } from '@mdi/js';
+import Modal from '~/components/Modal.vue';
+import { ActivityType } from '~/types/Activity';
+import { useActivitiesComplexForm } from '~/pinia-store/useActivitiesComplexForm';
+import AddNewActivityModal from '~/components/tranings/AddNewActivityModal.vue';
 
 export default defineComponent({
     components: {
@@ -56,23 +56,20 @@ export default defineComponent({
     },
 
     setup(_, { emit, expose }) {
-        const emptyActivitiesMessage =
-            "Проверьте правильность ввода упражнений. Необходимо ввести минимум одно упражнение. При вводе двух или более упражнений, повторения не допускаются";
+        const emptyActivitiesMessage = 'Проверьте правильность ввода упражнений. Необходимо ввести минимум одно упражнение. При вводе двух или более упражнений, повторения не допускаются';
 
         const activitiesForm = useActivitiesComplexForm();
-        const { activitiesComplexForm: form, activities } =
-            storeToRefs(activitiesForm);
+        const { activitiesComplexForm: form, activities } = storeToRefs(activitiesForm);
         const { updateForm, resetCurrentActivityForm } = activitiesForm;
 
         const deleteIcon = mdiDeleteForever;
         const activitiyStore = useActivityStore();
-        const { bodyParts, difficulties, allActivities } =
-            storeToRefs(activitiyStore);
+        const { allActivities } = storeToRefs(activitiyStore);
         const { getAllActivities } = activitiyStore;
 
         const addNewActivityModal = ref<typeof AddNewActivityModal>();
 
-        let showConfirmDeleteModalState = ref<{
+        const showConfirmDeleteModalState = ref<{
             choosenId?: number;
             show: boolean;
         }>({
@@ -80,39 +77,65 @@ export default defineComponent({
         });
 
         const title = computed(() => form.value.title);
-        const allAcvitivitiesForOptions = computed(() =>
-            allActivities.value.map((el) => ({
-                label: el.name,
-                value: el.id_activity,
-            }))
-        );
+        const allAcvitivitiesForOptions = computed(() => allActivities.value.map((el) => ({
+            label: el.name,
+            value: el.id_activity,
+        })));
         const description = computed(() => form.value.description);
         const fullName = computed(() => {
             if (form.value.author !== undefined) {
                 return getFullNameFromNameAndSurname(
                     form.value.author.name,
-                    form.value.author.surname
+                    form.value.author.surname,
                 );
             }
+            return '';
         });
         const DataForTable = computed(() => ({
-            headers: ["Название упражнения", "Часть тела", "Сложность"],
+            headers: ['Название упражнения', 'Часть тела', 'Сложность'],
             rows:
-                activities.value.map((el: ActivityType) => {
-                    return {
-                        name: el.name,
-                        bodypart: el.bodypart.name,
-                        difficulty: el.difficulty.name,
-                    };
-                }) || [],
+                activities.value.map((el: ActivityType) => ({
+                    name: el?.name,
+                    bodypart: el?.bodypart.name,
+                    difficulty: el?.difficulty.name,
+                })) || [],
         }));
 
         const isDataEmpty = computed(
-            () => DataForTable.value.rows.length === 0
+            () => DataForTable.value.rows.length === 0,
         );
 
-        const addNewItem = () => {
-            const activitiesNew = [...activities.value, allActivities.value[0]];
+        const rules = {
+            title: {
+                required,
+                maxLength: maxLength(40),
+                minLength: minLength(10),
+            },
+            description: {
+                required,
+                maxLength: maxLength(100),
+                minLength: minLength(10),
+            },
+            activities: {
+                required,
+                isNotDuplicate() {
+                    const idsArr = activities.value.map(
+                        // eslint-disable-next-line camelcase
+                        ({ id_activity }) => id_activity,
+                    );
+                    return new Set(idsArr).size === activities.value.length;
+                },
+            },
+        };
+
+        const v$ = useVuelidate(rules, { title, description, activities });
+
+        const addNewItem = (id?: number) => {
+            const newActivity = id !== undefined
+                ? allActivities.value.find((el) => el.id_activity === id)
+                : allActivities.value[0] || {};
+
+            const activitiesNew = [...activities.value, newActivity!];
             updateForm({ activities: activitiesNew });
         };
 
@@ -121,7 +144,7 @@ export default defineComponent({
             return { isValid: !v$.value.$error };
         }
         function edit() {
-            emit("edit");
+            emit('edit');
         }
 
         function openModal(id?: number) {
@@ -132,11 +155,10 @@ export default defineComponent({
         }
 
         const deleteActivity = () => {
-            const index: number | undefined =
-                showConfirmDeleteModalState.value.choosenId;
+            const index: number | undefined = showConfirmDeleteModalState.value.choosenId;
             if (index === undefined) return;
             const activitiesNew = activities.value.filter(
-                (_, idx) => idx !== index
+                (__, idx) => idx !== index,
             );
             updateForm({ activities: activitiesNew });
 
@@ -150,47 +172,37 @@ export default defineComponent({
                 (el: ActivityType, idx) => {
                     if (index === idx) {
                         return allActivities.value.find(
-                            ({ id_activity }) => id_activity === value
+                            // eslint-disable-next-line camelcase
+                            ({ id_activity }) => id_activity === value,
                         ) as ActivityType;
                     }
                     return el;
-                }
+                },
             );
 
             updateForm({ activities: newActivities });
+        };
+
+        const addedNewActivity = async(id: number) => {
+            await getAllActivities();
+            addNewActivityModal.value!.show = false;
+            addNewItem(id);
         };
 
         onBeforeUnmount(() => {
             resetCurrentActivityForm();
         });
 
-        onMounted(async () => {
+        onMounted(async() => {
             await getAllActivities();
         });
 
-        const rules = {
-            title: { required },
-            description: { required },
-            activities: {
-                required,
-                isNotDuplicate(value: any) {
-                    const idsArr = activities.value.map(
-                        ({ id_activity }) => id_activity
-                    );
-                    return new Set(idsArr).size === activities.value.length;
-                },
-            },
-        };
-        const v$ = useVuelidate(rules, { title, description, activities });
-
-        expose(["validateForm"]);
+        expose(['validateForm']);
         return {
             v$,
             form,
             fullName,
             DataForTable,
-            bodyParts,
-            difficulties,
             title,
             description,
             deleteIcon,
@@ -199,6 +211,9 @@ export default defineComponent({
             isDataEmpty,
             emptyActivitiesMessage,
             addNewActivityModal,
+            allActivities,
+            addedNewActivity,
+            getAllActivities,
             changeActivity,
             validateForm,
             updateForm,
@@ -216,7 +231,7 @@ export default defineComponent({
         <div v-if="loading">
             <base-loader />
         </div>
-        <div :class="$style.form" v-else>
+        <div v-else :class="$style.form">
             <div :class="$style.content">
                 <form-row title="Название программы">
                     <base-input
@@ -239,7 +254,7 @@ export default defineComponent({
                 </form-row>
                 <form-row title="Дата создания">
                     <base-text v-if="form.date_creation">
-                        {{ $dayjs(form.date_creation).format('DD.MM.YYYY') }}
+                        {{ $dayjs(form.date_creation).format("DD.MM.YYYY") }}
                     </base-text>
                 </form-row>
                 <form-row title="Автор">
@@ -254,8 +269,8 @@ export default defineComponent({
                     :value="emptyActivitiesMessage"
                 />
                 <base-simple-table
-                    tableTitle="Список упражнений"
-                    :tableHeaders="DataForTable.headers"
+                    table-title="Список упражнений"
+                    :table-headers="DataForTable.headers"
                 >
                     <template #rows>
                         <tr
@@ -267,7 +282,7 @@ export default defineComponent({
                                     :value="item.name"
                                     :options="allAcvitivitiesForOptions"
                                     :clearable="false"
-                                    placholder="Выбор упражнения"
+                                    placeholder="Выбор упражнения"
                                     @input="
                                         ({ value }) =>
                                             changeActivity(value, index)
@@ -310,33 +325,31 @@ export default defineComponent({
                                 </base-text>
                             </td>
                         </tr>
-                        <tr></tr>
+                        <tr />
                     </template>
                 </base-simple-table>
                 <div :class="$style.addButton">
-                    <base-button @click="addNewItem" variant="simple">
+                    <base-button variant="simple" @click="addNewItem()">
                         Добавить
                     </base-button>
 
                     <base-button
-                        @click="
-                            () => {
-                                addNewActivityModal.show = true;
-                            }
-                        "
                         variant="simple"
+                        @click="addNewActivityModal.show = true"
                     >
                         Своё упражнение
                     </base-button>
                 </div>
             </div>
-            <div :class="$style.button" v-if="showButton">
-                <base-button @click="edit"> Сохранить </base-button>
+            <div v-if="showButton" :class="$style.button">
+                <base-button @click="edit">
+                    Сохранить
+                </base-button>
             </div>
         </div>
         <modal
             v-if="showConfirmDeleteModalState.show"
-            @close="() => (showConfirmDeleteModalState.show = false)"
+            @close="showConfirmDeleteModalState.show = false"
             @confirm="deleteActivity"
         >
             <template #header>
@@ -347,16 +360,9 @@ export default defineComponent({
         </modal>
         <add-new-activity-modal
             ref="addNewActivityModal"
-            @close="
-                () => {
-                    addNewActivityModal.show = false;
-                }
-            "
-            @confirm="
-                () => {
-                    console.log('confirm');
-                }
-            "
+            :exists-activities="allActivities"
+            @close="addNewActivityModal.show = false"
+            @confirm="(value) => addedNewActivity(value)"
         />
     </base-container>
 </template>

@@ -29,15 +29,21 @@
         </div>
         <slot />
         <div :class="$style.hide">
-            <base-button :class="$style.open" @click="open"
-                >Открыть</base-button
+            <base-button
+                :class="$style.open"
+                @click="open"
             >
+                Открыть
+            </base-button>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import { BaseText } from "~/components/base";
+import {
+    Vue, Component, Prop, Emit,
+} from 'vue-property-decorator';
+// eslint-disable-next-line import/no-cycle
+import { BaseText } from '~/components/base';
 
 @Component({
     components: {
@@ -74,16 +80,20 @@ export default class Card extends Vue {
     })
     readonly titleIcon?: string;
 
-    @Emit("titleButtonAction")
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('titleButtonAction')
     titleButtonAction() {}
 
-    @Emit("open")
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('open')
     open() {}
 }
 </script>
 
 <style lang="less" module>
 .container {
+    display: flex;
+    flex-direction: column;
     position: relative;
     padding: 10px;
     background-color: #fff;
@@ -109,6 +119,7 @@ export default class Card extends Vue {
 
 .subtitle {
     margin-bottom: 10px;
+    flex-grow: 1;
 
     &-text {
         word-break: break-all;

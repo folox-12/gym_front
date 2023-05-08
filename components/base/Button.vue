@@ -7,55 +7,55 @@
         :disabled="loading"
         v-on="$listeners"
     >
-            <div v-if="loading">
-                <loader
-                    :width="width"
-                    :height="20"
-                 />
-            </div>
-            <div v-else>
-                <slot>
-                    {{ text }}
-                </slot>
-            </div>
+        <div v-if="loading">
+            <loader
+                :width="width"
+                :height="20"
+            />
+        </div>
+        <div v-else>
+            <slot>
+                {{ text }}
+            </slot>
+        </div>
     </component>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import  Loader  from "~/components/base/Loader.vue"
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import Loader from '~/components/base/Loader.vue';
 
 enum TextTag {
-    A = "a",
-    BUTTON = "button",
-    NUXT = "nuxt-link",
+    A = 'a',
+    BUTTON = 'button',
+    NUXT = 'nuxt-link',
 }
 
 enum TextSize {
-    XXS = "xxs",
-    XS = "xs",
-    SM = "sm",
-    MD = "md",
-    LG = "lg",
-    XL = "xl",
+    XXS = 'xxs',
+    XS = 'xs',
+    SM = 'sm',
+    MD = 'md',
+    LG = 'lg',
+    XL = 'xl',
 }
 
 enum TextWeight {
-    REGULAR = "regular",
-    MEDIUM = "medium",
-    SEMIBOLD = "semibold",
-    BOLD = "bold",
+    REGULAR = 'regular',
+    MEDIUM = 'medium',
+    SEMIBOLD = 'semibold',
+    BOLD = 'bold',
 }
 
 enum Variant {
-    DEFAULT = "default",
-    SIMPLE = "simple",
-    UNSTYLE = "unstyle",
+    DEFAULT = 'default',
+    SIMPLE = 'simple',
+    UNSTYLE = 'unstyle',
 }
 
 @Component({
     components: {
         Loader,
-    }
+    },
 })
 export default class Button extends Vue {
     @Prop({
@@ -68,8 +68,7 @@ export default class Button extends Vue {
     @Prop({
         type: String as () => TextWeight,
         default: undefined,
-        validator: (value: TextWeight) =>
-            Object.values(TextWeight).includes(value),
+        validator: (value: TextWeight) => Object.values(TextWeight).includes(value),
     })
     readonly weight?: TextWeight;
 
@@ -122,7 +121,7 @@ export default class Button extends Vue {
             [`gm-button--${this.variant}`]: this.variant,
             [`gm-button--${this.size}`]: this.size,
             [`gm-button--${this.weight}`]: this.weight,
-            "gm-button--break-word": this.breakWord,
+            'gm-button--break-word': this.breakWord,
         };
     }
 }

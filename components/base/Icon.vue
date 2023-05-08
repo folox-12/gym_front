@@ -10,7 +10,7 @@
         :class="iconClasses"
         v-on="$listeners"
     >
-    >
+        >
         <title
             v-if="iconName"
             :id="iconName"

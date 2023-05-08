@@ -1,45 +1,53 @@
 <template>
-    <transition name="modal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div v-on-clickaway="close" class="modal-container"
-                    :class="ContainerClasses"
-                >
-                    <div class="modal-header">
-                        <slot name="header"> Вы действительно хотите это сделать? </slot>
-                    </div>
-                    <div class="modal-body">
-                        <div v-if="loading">
-                            <base-loader />
+    <portal to="modal">
+        <transition name="modal">
+            <div class="modal-mask">
+                <div class="modal-wrapper">
+                    <div
+                        class="modal-container"
+                        :class="ContainerClasses"
+                        v-on-clickaway="close"
+                    >
+                        <div class="modal-header">
+                            <slot name="header">
+                                Вы действительно хотите это сделать?
+                            </slot>
                         </div>
-                        <div v-else>
-                            <slot name="body"/>
+                        <div class="modal-body">
+                            <div v-if="loading">
+                                <base-loader />
+                            </div>
+                            <div v-else>
+                                <slot name="body" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <slot name="footer">
-                            <base-button :disabled="loading" variant="simple" @click="confirm">
-                                Да
-                            </base-button>
-                            <base-button :disabled="loading" variant="simple" @click="close">
-                                Нет
-                            </base-button>
-                        </slot>
+                        <div class="modal-footer">
+                            <slot name="footer">
+                                <base-button :disabled="loading" variant="simple" @click="confirm">
+                                    Да
+                                </base-button>
+                                <base-button :disabled="loading" variant="simple" @click="close">
+                                    Нет
+                                </base-button>
+                            </slot>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </transition>
+        </transition>
+    </portal>
 </template>
 <script lang="ts">
 import { mixin as clickaway } from 'vue-clickaway';
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import { BaseButton, BaseLoader } from "~/components/base"
+import {
+    Vue, Component, Prop, Emit,
+} from 'vue-property-decorator';
+import { BaseButton, BaseLoader } from '~/components/base';
 
 enum WIDTH {
-    SMALL = "small",
-    MEDIUM = "medium",
-    Large="large",
+    SMALL = 'small',
+    MEDIUM = 'medium',
+    Large='large',
 }
 
 @Component({
@@ -70,10 +78,12 @@ export default class Modal extends Vue {
         };
     }
 
-    @Emit("close")
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('close')
     close() {}
 
-    @Emit("confirm")
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('confirm')
     confirm() {}
 }
 </script>
@@ -85,9 +95,10 @@ export default class Modal extends Vue {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     display: table;
     transition: opacity 0.3s ease;
+    backdrop-filter: blur(8px);
 }
 
 .modal-wrapper {
@@ -147,5 +158,12 @@ export default class Modal extends Vue {
 .modal-leave-active .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+@media screen and(max-width: @md) {
+.modal-container {
+    width: 80%!important;
+    padding: 15px;
+}
 }
 </style>

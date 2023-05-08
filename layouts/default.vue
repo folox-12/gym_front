@@ -5,6 +5,8 @@
             <Nuxt />
             <notifications group="server-response" />
         </main>
+        <portal-target name="modal" />
+        <portal-target name="mobile" />
     </div>
 </template>
 
@@ -12,10 +14,10 @@
 import StickyHeader from '@/components/StickyHeader.vue';
 
 export default {
-    name: 'default',
+    name: 'DefaultLayout',
     components: {
-        StickyHeader
-    }
+        StickyHeader,
+    },
 };
 
 </script>

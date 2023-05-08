@@ -20,7 +20,9 @@
            </base-text>
         </div>
     </slot>
-    <slot />
+    <div :class="$style.content">
+        <slot />
+    </div>
 </div>
 </template>
 <script lang="ts">
@@ -47,13 +49,16 @@ export default class FormRow extends Vue {
 </script>
 <style lang="less" module>
 .row {
-
+    margin-bottom: 10px;
 }
 
 .title {
-
 }
 .subtitle {
+    margin-top: 5px;
+}
+
+.content {
     margin-top: 5px;
 }
 </style>

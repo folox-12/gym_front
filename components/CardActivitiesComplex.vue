@@ -6,7 +6,6 @@
         :title-icon="icons"
         @titleButtonAction="actionWithComplex"
         @open="open"
-
     >
         <div :class="$style.container">
             <div v-for="(item, index) in porperties" :key="index">
@@ -19,9 +18,15 @@
     </base-card>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import { BaseText, BaseIcon, BaseButton, BaseCard } from "~/components/base";
-import { mdiAccountCircle, mdiCalendarClock, mdiEmailOutline, mdiPlusBox, mdiMinusBox } from "@mdi/js";
+import {
+    Vue, Component, Prop, Emit,
+} from 'vue-property-decorator';
+import {
+    BaseText, BaseIcon, BaseButton, BaseCard,
+} from '~/components/base';
+import {
+    mdiAccountCircle, mdiCalendarClock, mdiEmailOutline, mdiPlusBox, mdiMinusBox,
+} from '@mdi/js';
 
 @Component({
     components: {
@@ -81,7 +86,7 @@ export default class CardActivitiesComplex extends Vue {
 
         date: {
             icon: mdiCalendarClock,
-            text: this.$dayjs(this.dateCreation).format("DD.MM.YYYY"),
+            text: this.$dayjs(this.dateCreation).format('DD.MM.YYYY'),
         },
     };
 
@@ -90,21 +95,24 @@ export default class CardActivitiesComplex extends Vue {
     }
 
     actionWithComplex() {
-        if(this.isSubscribed) {
-            return this.unsubscribeFromComplex()
+        if (this.isSubscribed) {
+            return this.unsubscribeFromComplex();
         }
 
-        return this.subscribeToComplex()
+        return this.subscribeToComplex();
     }
 
-    @Emit("subscribeToComplex")
-    subscribeToComplex(){}
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('subscribeToComplex')
+    subscribeToComplex() {}
 
-    @Emit("unsubscribeFromComplex")
-    unsubscribeFromComplex(){}
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('unsubscribeFromComplex')
+    unsubscribeFromComplex() {}
 
-    @Emit("routeToComplex")
-    open(){}
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('routeToComplex')
+    open() {}
 }
 </script>
 
@@ -116,5 +124,4 @@ export default class CardActivitiesComplex extends Vue {
     background-color: #fff;
     gap: 5px 0;
 }
-
 </style>

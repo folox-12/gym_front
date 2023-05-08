@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { ActivityType } from "~/types/Activity";
+import { ActivityToSendType, ActivityType } from "~/types/Activity";
 import { NetworkData } from "~/types/helpers";
 import { $services } from "~/utils/service";
 
 
 interface State {
     activities: NetworkData<Array<ActivityType>>;
+    adaptionNewActivity: NetworkData<number>;
 }
 
 export const useActivityStore = defineStore('activity', {
@@ -15,7 +16,13 @@ export const useActivityStore = defineStore('activity', {
             data: null,
             error: null,
         },
+        adaptionNewActivity: {
+            loading: false,
+            data: null,
+            error: null,
+        }
     }),
+
     getters: {
         allActivities({activities: { data }}): ActivityType[] {
             return data || [];
@@ -27,14 +34,28 @@ export const useActivityStore = defineStore('activity', {
             return data?.map(el => el.difficulty)
         },
     },
+
     actions: {
         async getAllActivities() {
             this.activities.loading = true;
             const { data, error}  = await $services.activity.fetchAllActivity();
             if (error) {
-                return this.activities = {...this.activities, error, loading: false}
+                this.activities = {...this.activities, error, loading: false}
+                return;
             }
             this.activities = {data, loading: false, error:null}
+        },
+
+        async createNewActivity(activity: ActivityToSendType) {
+            this.adaptionNewActivity.loading = true;
+            const { data, error}  = await $services.activity.createNewActivity(activity);
+
+            if(error) {
+                this.adaptionNewActivity = { ...this.adaptionNewActivity, error, loading: false}
+                return;
+            }
+               
+            this.adaptionNewActivity= {data, loading: false, error:null}
         },
     }
 })
