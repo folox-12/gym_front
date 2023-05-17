@@ -1,8 +1,6 @@
-import { defineStore } from "pinia";
-import { ActivitiesComplexType, ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
-import { ActivityType } from "~/types/Activity";
-import { UserAsAuthor } from "~/types/Users";
-
+import { defineStore } from 'pinia';
+import { ActivityType } from '~/types/Activity';
+import { UserAsAuthor } from '~/types/Users';
 
 export interface ActivitiesComplexForm {
     id_activities_complex: number | null;
@@ -19,7 +17,7 @@ interface State {
     activitiesComplexForm: ActivitiesComplexForm;
 }
 
-export const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexForm= {
+export const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexForm = {
     id_activities_complex: null,
     id_author: null,
     title: null,
@@ -28,10 +26,10 @@ export const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexForm= {
     rating: 1,
     author: undefined,
     activities: [],
-}
-export const useActivitiesComplexForm = defineStore("activitiesComplexForm", {
+};
+export const useActivitiesComplexForm = defineStore('activitiesComplexForm', {
     state: (): State => ({
-        activitiesComplexForm: {...DEFAULT_ACTIVITIES_FORM},
+        activitiesComplexForm: { ...DEFAULT_ACTIVITIES_FORM },
     }),
     getters: {
         activities(): ActivityType[] {
@@ -43,10 +41,10 @@ export const useActivitiesComplexForm = defineStore("activitiesComplexForm", {
             this.activitiesComplexForm = {
                 ...this.activitiesComplexForm,
                 ...payload,
-            }
+            };
         },
         resetCurrentActivityForm() {
-            this.activitiesComplexForm= {
+            this.activitiesComplexForm = {
                 ...DEFAULT_ACTIVITIES_FORM,
             };
         },

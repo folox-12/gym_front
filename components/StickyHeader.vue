@@ -96,23 +96,33 @@ export default class StickyHeader extends Vue {
 
     iconsMenu = mdiMenu;
 
-    navigationsElements = [
-        {
-            name: 'Главная',
-            to: '/',
-            show: false,
-        },
-        {
-            name: 'Программы тренировок',
-            to: '/tranings/',
-            show: true,
-        },
-        {
-            name: 'Личный кабинет',
-            to: '/profile/',
-            show: this.$auth.loggedIn,
-        },
-    ];
+    get navigationsElements(): Array<{
+        name: string,
+        to: string,
+        show: boolean,
+        close: boolean
+    }> {
+        return [
+            {
+                name: 'Главная',
+                to: '/',
+                show: false,
+                close: true,
+            },
+            {
+                name: 'Программы тренировок',
+                to: '/tranings/',
+                show: true,
+                close: true,
+            },
+            {
+                name: 'Личный кабинет',
+                to: '/profile/',
+                close: true,
+                show: this.$auth.loggedIn,
+            },
+        ];
+    }
 
     openMobileMenu() {
         this.mobileHeader.isOpen = true;
@@ -135,9 +145,10 @@ export default class StickyHeader extends Vue {
 }
 
 .header {
-    position: sticky;
+    position: fixed;
     width: 100%;
     background-color: #fff;
+    z-index: 999;
 
     nav {
         display: grid;
