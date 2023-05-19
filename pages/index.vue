@@ -42,6 +42,7 @@ Component.registerHooks(['head']);
         LandingSection,
 
     },
+
     middleware: [fetchProfileData],
 })
 export default class homePage extends Vue {

@@ -102,7 +102,6 @@ const Mappers = Vue.extend({
     },
 });
 
-Component.registerHooks(['fetch']);
 @Component({
     components: {
         BaseContainer,
@@ -125,13 +124,7 @@ export default class StickyHeader extends Mappers {
 
     topDistance = 0;
 
-    get transperentMutation() {
-        return this.transperent;
-    }
-
-    set transperentMutation(value: boolean) {
-        this.transperentMutation = value;
-    }
+    transperentMutation = this.transperent;
 
     get profileData() {
         return this.profile.data;
