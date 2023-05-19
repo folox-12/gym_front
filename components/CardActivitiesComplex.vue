@@ -5,6 +5,7 @@
         :show-title-button="$auth.loggedIn"
         :title-icon="icons"
         @titleButtonAction="actionWithComplex"
+        @click="open"
         @open="open"
     >
         <div :class="$style.container">

@@ -3,11 +3,11 @@
         <div v-if="loading">
             <base-loader />
         </div>
-        <div :class="$style.form" v-else>
+        <div v-else :class="$style.form">
             <div :class="$style.content">
                 <div :class="$style.left">
                     <form-row title="Описание">
-                        <base-text>
+                        <base-text as="span">
                             {{ activity.description }}
                         </base-text>
                     </form-row>
@@ -22,25 +22,21 @@
                     </form-row>
                     <form-row title="Автор">
                         <base-text>
-                            {{ fullName }}
+                            {{ fullName || activity.author.email }}
                         </base-text>
-                    </form-row>
-                    <form-row title="Рейтинг">
-                        <rating :value="activity.rating" readonly />
                     </form-row>
                 </div>
                 <div :class="$style.right">
                     <base-simple-table
-                     tableTitle="Список упражнений"
-                     :tableHeaders="DataForTable.headers"
-
+                        table-title="Список упражнений"
+                        :table-headers="DataForTable.headers"
                     >
                         <template #rows>
                             <tr v-for="(item, index) in DataForTable.rows" :key="index">
                                 <td>
-                                <base-text>
-                                    {{ item.name }}
-                                </base-text>
+                                    <base-text>
+                                        {{ item.name }}
+                                    </base-text>
                                 </td>
                                 <td>
                                     <base-text>
@@ -55,11 +51,15 @@
                             </tr>
                         </template>
                     </base-simple-table>
-
                 </div>
             </div>
-            <div :class="$style.button" v-if="showButton">
-                <base-button variant="simple" @click="buttonCallback" :loading="buttonLoading" :width="100">
+            <div v-if="showButton" :class="$style.button">
+                <base-button
+                    variant="simple"
+                    :loading="buttonLoading"
+                    :width="100"
+                    @click="buttonCallback"
+                >
                     {{ buttonText }}
                 </base-button>
             </div>
@@ -67,12 +67,15 @@
     </base-container>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import { BaseContainer, BaseLoader, BaseButton, BaseSimpleTable, BaseText } from "~/components/base";
-import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
-import { FormRow } from "~/components/form/";
-import Rating from "~/components/Rating.vue";
-import { getFullNameFromNameAndSurname } from "~/utils/general";
+import {
+    Vue, Component, Prop, Emit,
+} from 'vue-property-decorator';
+import {
+    BaseContainer, BaseLoader, BaseButton, BaseSimpleTable, BaseText,
+} from '~/components/base';
+import { ActivitiesComplexWithActivities } from '~/types/ActivitiesComplex';
+import { FormRow } from '~/components/form/';
+import { getFullNameFromNameAndSurname } from '~/utils/general';
 
 @Component({
     components: {
@@ -80,7 +83,6 @@ import { getFullNameFromNameAndSurname } from "~/utils/general";
         BaseLoader,
         BaseButton,
         FormRow,
-        Rating,
         BaseSimpleTable,
         BaseText,
     },
@@ -111,7 +113,7 @@ export default class TraningForm extends Vue {
 
     @Prop({
         type: String,
-        default: "Сохранить",
+        default: 'Сохранить',
     })
     readonly buttonText?: string;
 
@@ -119,27 +121,27 @@ export default class TraningForm extends Vue {
         if (this.activity && this.activity.author !== undefined) {
             return getFullNameFromNameAndSurname(
                 this.activity.author.name,
-                this.activity.author.surname
+                this.activity.author.surname,
             );
         }
+        return '';
     }
 
     get DataForTable() {
         return {
-            headers:['Название упражнения', 'Часть тела', 'Сложность'],
-            rows:[
-              ...this.activity!.activities.map(el=>{
-                return {
+            headers: ['Название упражнения', 'Часть тела', 'Сложность'],
+            rows: [
+                ...this.activity!.activities.map((el) => ({
                     name: el.name,
                     bodypart: el.bodypart.name,
                     difficulty: el.difficulty.name,
-                }
-              })
+                })),
             ],
-        }
+        };
     }
 
-    @Emit("buttonCallback")
+    // eslint-disable-next-line class-methods-use-this
+    @Emit('buttonCallback')
     buttonCallback() {}
 }
 </script>
@@ -147,6 +149,7 @@ export default class TraningForm extends Vue {
 .form {
     background-color: #fff;
     padding: 15px;
+    overflow: hidden;
 }
 
 .button {
@@ -161,7 +164,7 @@ export default class TraningForm extends Vue {
 }
 
 .left {
-    flex: 0 0 35%;
+    flex: 0 0 30%;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -169,7 +172,23 @@ export default class TraningForm extends Vue {
 }
 
 .right {
-    flex: 1 0 auto;
+    flex: 1 0 75%;
     overflow: hidden;
+}
+
+@media screen and (max-width: @md) {
+    .content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .left, .right {
+        flex-basis: 100%;
+    }
+
+    .left {
+        border-right: none;
+        border-bottom: 1px solid var(--gm-colors-black-alpha-200);
+    }
 }
 </style>

@@ -1,5 +1,5 @@
-import { UserAsAuthor } from "./Users";
-import { ActivityType } from "./Activity";
+import { UserAsAuthor } from './Users';
+import { ActivityType } from './Activity';
 
 export interface ActivitiesComplexType {
     id_activities_complex?: number;
@@ -7,7 +7,6 @@ export interface ActivitiesComplexType {
     title: string | null;
     description: string | null;
     date_creation: string | null;
-    rating: number | null;
     author?: UserAsAuthor;
 }
 export interface ActivitiesComplexWithActivities extends ActivitiesComplexType {

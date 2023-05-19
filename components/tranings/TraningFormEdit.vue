@@ -19,7 +19,6 @@ import {
     BaseMessage,
 } from '~/components/base';
 import { FormRow } from '~/components/form/';
-import Rating from '~/components/Rating.vue';
 import { getFullNameFromNameAndSurname } from '~/utils/general';
 import { useActivityStore } from '~/pinia-store/useActivityStore';
 import { storeToRefs } from 'pinia';
@@ -35,7 +34,6 @@ export default defineComponent({
         BaseLoader,
         BaseButton,
         FormRow,
-        Rating,
         BaseSimpleTable,
         BaseText,
         BaseInput,
@@ -258,10 +256,7 @@ export default defineComponent({
                     </base-text>
                 </form-row>
                 <form-row title="Автор">
-                    <base-text> {{ fullName }}(Вы) </base-text>
-                </form-row>
-                <form-row title="Рейтинг">
-                    <rating :value="form.rating" readonly />
+                    <base-text> {{ fullName || ('Вы') }} </base-text>
                 </form-row>
                 <base-message
                     v-if="v$.activities.$error"

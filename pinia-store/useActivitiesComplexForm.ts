@@ -8,7 +8,6 @@ export interface ActivitiesComplexForm {
     title: string | null;
     description: string | null;
     date_creation: Date | null;
-    rating: number | null;
     author?: UserAsAuthor;
     activities: ActivityType[];
 }
@@ -23,8 +22,6 @@ export const DEFAULT_ACTIVITIES_FORM: ActivitiesComplexForm = {
     title: null,
     description: null,
     date_creation: null,
-    rating: 1,
-    author: undefined,
     activities: [],
 };
 export const useActivitiesComplexForm = defineStore('activitiesComplexForm', {

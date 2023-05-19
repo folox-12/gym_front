@@ -1,6 +1,8 @@
 <template>
     <div class="layout">
-        <sticky-header />
+        <sticky-header
+            transperent
+        />
         <main>
             <Nuxt />
             <notifications group="server-response" />
@@ -14,13 +16,13 @@
 import StickyHeader from '@/components/StickyHeader.vue';
 
 export default {
-    name: 'DefaultLayout',
+    name: 'LandingLayout',
     components: {
         StickyHeader,
     },
 };
 
 </script>
+
 <style lang="less" scoped>
-    main { margin-top: 130px; }
 </style>

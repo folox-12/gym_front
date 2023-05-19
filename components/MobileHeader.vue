@@ -35,8 +35,16 @@ export default defineComponent({
             currentWidth.value = document.documentElement.clientWidth;
         };
 
-        const routeToLink = (line: string, close = false) => {
+        const routeToLink = (line: string) => {
             if (router) router.push(line);
+        };
+
+        const mobileAction = (cb: Function | string, close = false) => {
+            if (typeof cb === 'string') {
+                routeToLink(cb);
+            } else {
+                cb();
+            }
             if (close) isOpen.value = false;
         };
 
@@ -56,7 +64,7 @@ export default defineComponent({
             isOpen,
             props,
             mdiWindowClose,
-            routeToLink,
+            mobileAction,
         };
     },
 });
@@ -88,7 +96,10 @@ export default defineComponent({
                         size="lg"
                         variant="unstyle"
                         :class="$style.item"
-                        @click="routeToLink(item.to, item.close)"
+                        @click="
+                            const currentCallBackOrString = item.cb? item.cb : item.to;
+                            mobileAction(currentCallBackOrString, item.close)
+                        "
                     >
                         {{ item.name }}
                     </base-button>

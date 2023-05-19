@@ -1,29 +1,35 @@
 <template>
-    <table :class="$style.table">
-        <tr v-if="tableTitle">
-            <th :colspan="tableHeaders.length">
-                <base-text weight="bold" size="lg">
-                    {{ tableTitle }}
-                </base-text>
-            </th>
-        </tr>
-        <tr v-if="tableHeaders">
-            <th v-for="(header, index) in tableHeaders" :key="index">
-                <base-text color="lighter" weight="regular">
-                    {{ header }}
-                </base-text>
-            </th>
-        </tr>
-        <tbody :class="$style.tbody">
-            <slot name="rows" />
-            <slot />
-        </tbody>
-    </table>
+    <div :class="$style.wrapperTable">
+        <div :class="$style.data">
+            <table :class="$style.table">
+                <tr v-if="tableTitle">
+                    <th :colspan="tableHeaders.length">
+                        <base-text weight="bold" size="lg">
+                            {{ tableTitle }}
+                        </base-text>
+                    </th>
+                </tr>
+                <tr v-if="tableHeaders">
+                    <th v-for="(header, index) in tableHeaders" :key="index">
+                        <base-text color="lighter" weight="regular">
+                            {{ header }}
+                        </base-text>
+                    </th>
+                </tr>
+                <tbody :class="$style.tbody">
+                    <slot name="rows" />
+                    <slot />
+                </tbody>
+            </table>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
-import { BaseText } from "~/components/base";
+import {
+    Vue, Component, Prop,
+} from 'vue-property-decorator';
+import { BaseText } from '~/components/base';
 
 @Component({
     components: {
@@ -54,8 +60,21 @@ export default class SimpleTable extends Vue {
 }
 </script>
 <style lang="less" module>
-.table {
+.wrapper-table {
+    overflow-x: auto;
+    position: relative;
     width: 100%;
+}
+
+.data {
+    min-width: 700px;
+}
+
+.table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    height: auto;
 }
 
 .empty {

@@ -6,11 +6,11 @@
             @close="() => showConfirmModal=false"
             @confirm="deleleteCurrentActivity"
         >
-        <template #header>
-            <base-text color="normal" weight="bold" size="xl">
-                Вы действительно хотите удалить программу?
-            </base-text>
-        </template>
+            <template #header>
+                <base-text color="normal" weight="bold" size="xl">
+                    Вы действительно хотите удалить программу?
+                </base-text>
+            </template>
         </modal>
         <base-container>
             <nuxt-link to="/tranings/">
@@ -28,7 +28,9 @@
             </base-text>
         </base-message>
         <gym-title>
-            <template #default>{{ currentTraningsInformation.title }}</template>
+            <template #default>
+                {{ currentTraningsInformation.title }}
+            </template>
             <template #buttons>
                 <div class="d-flex">
                     <div v-for="(icon, index) of icons" :key="index">
@@ -49,50 +51,53 @@
             :loading="currentActivity.loading"
             :show-button="$auth.loggedIn"
             :button-text="buttonProperty.text"
-            :button-loading="isSubscribed.loading || isUnsubscribed.loading || currentActivity.loading"
+            :button-loading="
+                isSubscribed.loading
+                    || isUnsubscribed.loading
+                    || currentActivity.loading"
             @buttonCallback="buttonProperty.callback"
         />
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
-import getCurrentId from "~/components/mixins/getCurrentId";
-import GymTitle from "~/components/Title.vue";
-import { mapState, mapActions } from "pinia";
+import { Vue, Component, Mixins } from 'vue-property-decorator';
+import getCurrentId from '~/components/mixins/getCurrentId';
+import GymTitle from '~/components/Title.vue';
+import { mapState, mapActions } from 'pinia';
 import {
     DEFAULT_ACTIVITIES_FORM,
     useActivitiesComplex,
-} from "~/pinia-store/ActivitiesComplexStore";
-import { useSubscription } from "~/pinia-store/SubscriptionStore";
+} from '~/pinia-store/ActivitiesComplexStore';
+import { useSubscription } from '~/pinia-store/SubscriptionStore';
 import {
     BaseContainer,
     BaseText,
     BaseButton,
     BaseIcon,
     BaseMessage,
-} from "~/components/base";
-import TraningForm from "~/components/tranings/TraningForm.vue";
-import { mdiDelete, mdiTableEdit } from "@mdi/js";
-import fetchSubscription from "~/middleware/fetchSubscribedIds";
-import Modal from "~/components/Modal.vue";
+} from '~/components/base';
+import TraningForm from '~/components/tranings/TraningForm.vue';
+import { mdiDelete, mdiTableEdit } from '@mdi/js';
+import fetchSubscription from '~/middleware/fetchSubscribedIds';
+import Modal from '~/components/Modal.vue';
 
 const Mappers = Vue.extend({
     computed: {
-        ...mapState(useActivitiesComplex, ["currentActivity", "isDeleted"]),
-        ...mapState(useSubscription, ["isSubscribed", "isUnsubscribed","subscribedComplexesId"]),
+        ...mapState(useActivitiesComplex, ['currentActivity', 'isDeleted']),
+        ...mapState(useSubscription, ['isSubscribed', 'isUnsubscribed', 'subscribedComplexesId']),
     },
 
     methods: {
         ...mapActions(useActivitiesComplex, [
-            "getCurrentActivity",
-            "resetCurrentActivityForm",
-            "deleteActivity"
+            'getCurrentActivity',
+            'resetCurrentActivityForm',
+            'deleteActivity',
         ]),
 
-        ...mapActions(useSubscription, ["subscribeToComplex", "unsubscribeFromComplex", "fetchSubscribedComplexesId"]),
+        ...mapActions(useSubscription, ['subscribeToComplex', 'unsubscribeFromComplex', 'fetchSubscribedComplexesId']),
     },
 });
-Component.registerHooks(["head"]);
+Component.registerHooks(['head']);
 @Component({
     components: {
         GymTitle,
@@ -108,7 +113,7 @@ Component.registerHooks(["head"]);
     middleware: [fetchSubscription],
 })
 export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
-    showConfirmModal:boolean = false;
+    showConfirmModal = false;
 
     get header() {
         return `Программа тренировок № ${this.currentId}`;
@@ -128,17 +133,17 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         return {
             iconEdit: {
                 icon: mdiTableEdit,
-                color: "basic",
-                title: "Редактировать",
+                color: 'basic',
+                title: 'Редактировать',
                 action: this.routeToEdit,
                 show: this.isUserAuthor,
             },
 
             iconDelete: {
                 icon: mdiDelete,
-                color: "danger",
-                title: "Удалить",
-                action: ()=> this.showConfirmModal = true,
+                color: 'danger',
+                title: 'Удалить',
+                action: () => this.showConfirmModal = true,
                 show: this.isUserAuthor,
             },
         };
@@ -148,41 +153,39 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         return (this.subscribedComplexesId.data || []).includes(this.currentId);
     }
 
-
     get buttonProperty() {
         return this.isComplexInSubscription
             ? {
-                  text: "Отписаться",
-                  callback: () => this.updateSubscription(this.unsubscribeFromComplex),
-              }
+                text: 'Отписаться',
+                callback: () => this.updateSubscription(this.unsubscribeFromComplex),
+            }
             : {
-                  text: "Подписаться",
-                  callback: () => this.updateSubscription(this.subscribeToComplex),
-              };
+                text: 'Подписаться',
+                callback: () => this.updateSubscription(this.subscribeToComplex),
+            };
     }
 
     async deleleteCurrentActivity() {
-        await this.deleteActivity(this.currentId)
+        await this.deleteActivity(this.currentId);
 
         if (this.isDeleted.error) {
             this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: this.isDeleted.error,
             });
         } else {
             this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
-                text: 'Комплекс удален'
+                group: 'server-response',
+                type: 'success',
+                title: 'Успешно',
+                text: 'Комплекс удален',
             });
 
             this.showConfirmModal = false;
-            this.$router.push('/tranings/')
+            this.$router.push('/tranings/');
         }
-
     }
 
     routeToEdit() {
@@ -190,34 +193,32 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     }
 
     async updateSubscription(callback: (id: string | number) => Promise<void>) {
-        let errorText: string = "";
+        let errorText = '';
         await callback(this.currentId);
 
         if (this.isSubscribed.error) {
-            errorText = this.isSubscribed.error
+            errorText = this.isSubscribed.error;
         }
         if (this.isUnsubscribed.error) {
-            errorText = this.isUnsubscribed.error
+            errorText = this.isUnsubscribed.error;
         }
 
-        if(this.isUnsubscribed.error || this.isSubscribed.error) {
+        if (this.isUnsubscribed.error || this.isSubscribed.error) {
             return this.$notify({
-                group: "server-response",
-                type: "error",
-                title: "Ошибка",
+                group: 'server-response',
+                type: 'error',
+                title: 'Ошибка',
                 text: errorText,
             });
-        } else {
-            this.$notify({
-                group: "server-response",
-                type: "success",
-                title: "Успешно",
-                text: "Операция удалась",
-            });
-
-            await this.fetchSubscribedComplexesId();
         }
+        this.$notify({
+            group: 'server-response',
+            type: 'success',
+            title: 'Успешно',
+            text: 'Операция удалась',
+        });
 
+        await this.fetchSubscribedComplexesId();
     }
 
     head() {
@@ -229,6 +230,7 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
     beforeDestroy() {
         this.resetCurrentActivityForm();
     }
+
     async fetch() {
         await this.getCurrentActivity(this.currentId);
     }

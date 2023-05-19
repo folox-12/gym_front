@@ -3,7 +3,6 @@ export interface UserAsAuthor {
     name: string,
     surname: string,
     email: string,
-    rating: number,
 }
 
 export interface User extends UserAsAuthor {

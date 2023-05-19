@@ -7,6 +7,7 @@
                 weight="bold"
                 color="dark"
                 text-transform="uppercase"
+                @dblclick="open"
             >
                 {{ title }}
             </base-text>

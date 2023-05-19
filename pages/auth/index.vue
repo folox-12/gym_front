@@ -2,7 +2,7 @@
     <div :class="$style.auth">
         <div :class="$style.route">
             <nuxt-link to="/">
-            {{ $t('auth.backToApp') }}
+                {{ $t('auth.backToApp') }}
             </nuxt-link>
         </div>
         <div :class="$style.title">
@@ -28,26 +28,27 @@
                 as="div"
             >
                 Пароль
-
             </base-text>
 
             <base-input
                 v-model="data.password"
                 :type-input="typePasswordInput"
                 :right-icon-action="showPassword"
-                :iconRight="icons.eye"
-                iconSize="14"
+                :icon-right="icons.eye"
+                icon-size="14"
             />
             <div :class="$style.buttons">
                 <base-text
                     as="div"
                 >
-                    <base-text :class="$style.hasAccount">Ещё нет аккаунта?</base-text>
+                    <base-text :class="$style.hasAccount">
+                        Ещё нет аккаунта?
+                    </base-text>
 
                     <base-button
                         as="a"
                         @click="routeToRegistrationPage"
-                     >
+                    >
                         Зарегистрируйтесь
                     </base-button>
                 </base-text>
@@ -69,11 +70,11 @@ import { IconHiddenEye } from '~/components/icons/';
 import { mdiEye } from '@mdi/js';
 import authorizated from '~/middleware/auth';
 
-Component.registerHooks(['head'])
+Component.registerHooks(['head']);
 
 @Component({
-    name: "authPage",
-    layout: "auth",
+    name: 'authPage',
+    layout: 'auth',
     components: {
         BaseButton,
         BaseText,
@@ -82,60 +83,62 @@ Component.registerHooks(['head'])
     },
     middleware: [authorizated],
 })
-export default class AuthPage extends Vue{
+export default class AuthPage extends Vue {
     data = {
-        email:"",
-        password:"",
+        email: '',
+        password: '',
 
     };
+
     icons = {
         eye: mdiEye,
-    }
-    typePasswordInput="password";
+    };
 
-    @Watch('$auth.loggedIn', {deep:true})
+    typePasswordInput = 'password';
+
+    @Watch('$auth.loggedIn', { deep: true })
     onChange(val: boolean) {
         if (val) {
-            setTimeout(()=>this.$router.push('/'), 2000);
+            setTimeout(() => this.$router.push('/'), 2000);
         }
     }
 
     head() {
         return {
-            title: "Авторизация - fitno"
-        }
+            title: 'Авторизация - fitno',
+        };
     }
 
     showPassword() {
         if (this.data?.password) {
-            this.typePasswordInput="text";
+            this.typePasswordInput = 'text';
 
-            setTimeout(() => this.typePasswordInput="password", 2000);
+            setTimeout(() => this.typePasswordInput = 'password', 2000);
         }
     }
 
     routeToRegistrationPage() {
-        this.$router.push("/auth/registration")
+        this.$router.push('/auth/registration');
     }
 
     async loginUser() {
         try {
-            const response = await this.$auth.loginWith('local', {data:this.data});
-            if( response && response.status== 200 ) {
+            const response = await this.$auth.loginWith('local', { data: this.data });
+            if (response && response.status == 200) {
                 this.$notify({
                     group: 'foo',
                     type: 'success',
                     title: 'Успешно',
-                    text: 'Успшеная авторизация'
+                    text: 'Успшеная авторизация',
                 });
             }
-        } catch ({responseError :{ message }}) {
-                this.$notify({
-                    group: 'foo',
-                    type: 'error',
-                    title: 'Ошибка',
-                    text: message as string,
-                })
+        } catch ({ responseError: { message } }) {
+            this.$notify({
+                group: 'foo',
+                type: 'error',
+                title: 'Ошибка',
+                text: message as string,
+            });
         }
     }
 }
@@ -168,7 +171,6 @@ export default class AuthPage extends Vue{
 
     margin-block: 15px;
 }
-
 
 .buttons {
     display: flex;

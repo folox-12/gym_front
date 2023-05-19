@@ -1,5 +1,11 @@
 <template>
-    <header :class="$style.header">
+    <header
+        ref="header"
+        :class="{
+            [$style.header]: true,
+            [$style.transperent]: transperentMutation,
+        }"
+    >
         <base-container>
             <nav>
                 <div
@@ -13,7 +19,7 @@
                 >
                     <li v-for="(item, index) in navigationsElements" :key="index">
                         <nuxt-link
-                            v-if="item.show"
+                            v-if="item.show && item.desktop"
                             class="nuxt-link"
                             :to="item.to"
                         >
@@ -78,7 +84,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Ref } from 'vue-property-decorator';
+import {
+    Vue, Component, Ref, Prop, Watch,
+} from 'vue-property-decorator';
 import { mdiMenu } from '@mdi/js';
 import { BaseContainer, BaseButton, BaseText } from '~/components/base/';
 import MobileHeader from '~/components/MobileHeader.vue';
@@ -94,13 +102,26 @@ import MobileHeader from '~/components/MobileHeader.vue';
 export default class StickyHeader extends Vue {
     @Ref('mobileHeader') mobileHeader!: typeof MobileHeader;
 
+    @Ref('header') header!: HTMLDivElement;
+
+    @Prop({
+        type: Boolean,
+        default: false,
+    }) readonly transperent!: boolean;
+
     iconsMenu = mdiMenu;
+
+    topDistance = 0;
+
+    transperentMutation = this.transperent;
 
     get navigationsElements(): Array<{
         name: string,
-        to: string,
+        to?: string,
         show: boolean,
+        desktop?: boolean,
         close: boolean
+        cb?: Function,
     }> {
         return [
             {
@@ -112,16 +133,49 @@ export default class StickyHeader extends Vue {
             {
                 name: 'Программы тренировок',
                 to: '/tranings/',
+                desktop: true,
                 show: true,
                 close: true,
             },
             {
                 name: 'Личный кабинет',
                 to: '/profile/',
+                desktop: true,
                 close: true,
                 show: this.$auth.loggedIn,
             },
-        ];
+            {
+                name: 'Войти',
+                close: true,
+                desktop: false,
+                show: !this.$auth.loggedIn,
+                cb: () => this.routeToAuthPage(),
+            },
+            {
+                name: 'Выйти',
+                close: true,
+                desktop: false,
+                show: this.$auth.loggedIn,
+                cb: () => this.logout(),
+            },
+        ].filter(({ show }) => show);
+    }
+
+    @Watch('topDistance')
+    onChange(newVal: number, oldVal: number) {
+        if (!oldVal && newVal) this.transperentMutation = false;
+        if (oldVal && !newVal) this.transperentMutation = true;
+    }
+
+    mounted() {
+        if (this.transperent) {
+            window.addEventListener('scroll', this.changeDistance);
+            this.changeDistance();
+        }
+    }
+
+    changeDistance() {
+        this.topDistance = window.pageYOffset;
     }
 
     openMobileMenu() {
@@ -149,6 +203,11 @@ export default class StickyHeader extends Vue {
     width: 100%;
     background-color: #fff;
     z-index: 999;
+    transition: 1s ease;
+
+    &.transperent {
+        background: transparent;
+    }
 
     nav {
         display: grid;
