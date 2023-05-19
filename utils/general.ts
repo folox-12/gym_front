@@ -8,8 +8,8 @@ export const DIFFICULTIES: DifficultyType[] = [
 ];
 
 export function getFullNameFromNameAndSurname(
-    name: string | undefined,
-    surname: string | undefined,
+    name: string | null,
+    surname: string | null,
 ): string | undefined {
     if (!name && !surname) return undefined;
     return `${name} ${surname}`;

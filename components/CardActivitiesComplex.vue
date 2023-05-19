@@ -10,10 +10,12 @@
     >
         <div :class="$style.container">
             <div v-for="(item, index) in porperties" :key="index">
-                <base-icon :path="item.icon" />
-                <base-text>
-                    {{ item.text }}
-                </base-text>
+                <template v-if="item.show">
+                    <base-icon :path="item.icon" />
+                    <base-text>
+                        {{ item.text }}
+                    </base-text>
+                </template>
             </div>
         </div>
     </base-card>
@@ -40,7 +42,8 @@ import {
 export default class CardActivitiesComplex extends Vue {
     @Prop({
         type: String,
-        required: true,
+        required: false,
+        default: '',
     })
     readonly authorName!: string;
 
@@ -78,16 +81,19 @@ export default class CardActivitiesComplex extends Vue {
         author: {
             icon: mdiAccountCircle,
             text: this.authorName,
+            show: !!this.authorName,
         },
 
         email: {
             icon: mdiEmailOutline,
             text: this.authorEmail,
+            show: true,
         },
 
         date: {
             icon: mdiCalendarClock,
             text: this.$dayjs(this.dateCreation).format('DD.MM.YYYY'),
+            show: true,
         },
     };
 

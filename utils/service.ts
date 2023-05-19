@@ -6,6 +6,7 @@ import ActivitiesComplex from '~/services/ActivitiesComplex';
 import Subscription from '~/services/SubscriptionService';
 import Activity from '~/services/Acitvity';
 import BodyPart from '~/services/BodyParts';
+import Profile from '~/services/ProfileService';
 
 type Services = {
     i18n: VueI18n & IVueI18n;
@@ -16,6 +17,7 @@ type Services = {
     subscription: Subscription,
     activity: Activity,
     bodyPart: BodyPart,
+    profile: Profile,
 };
 
 let $services = {} as Services;

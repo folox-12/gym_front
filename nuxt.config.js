@@ -28,7 +28,9 @@ export default {
         '@/assets/style/bootstrap-grid.min.css',
         '@/node_modules/normalize-css/normalize.css',
         '@/node_modules/vue-select/dist/vue-select.css',
+        '@/node_modules/vue-simple-calendar/static/css/default.css',
         '@/assets/style/main.less',
+        '@/assets/style/vue-calendar.less',
     ],
     styleResources: {
         less: [
@@ -46,6 +48,7 @@ export default {
         { src: '@/plugins/serviceAccessor.ts' },
         { src: '@/plugins/vselect.js' },
         { src: '@/plugins/portal-vue.js' },
+        { src: '@/plugins/vue-calendar.js', mode: 'client' },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

@@ -51,22 +51,22 @@
                         :class="$style.logged"
                     >
                         <base-text
-                            v-if="$auth.user.email && !$auth.user.name"
+                            v-if="profileData.email && !profileData.name"
                             color="light"
                         >
-                            {{ $auth.user.email }}
+                            {{ profileData.email }}
                         </base-text>
                         <base-text
-                            v-if="$auth.user.name"
+                            v-if="profileData.name"
                             color="light"
                         >
-                            {{ $auth.user.name }}
+                            {{ profileData.name }}
                         </base-text>
                         <base-text
-                            v-if="$auth.user.surname && $auth.user.name"
+                            v-if="profileData.surname && profileData.name"
                             color="light"
                         >
-                            {{ $auth.user.surname }}
+                            {{ profileData.surname }}
                         </base-text>
                         <base-button
                             text="Выйти"
@@ -90,7 +90,19 @@ import {
 import { mdiMenu } from '@mdi/js';
 import { BaseContainer, BaseButton, BaseText } from '~/components/base/';
 import MobileHeader from '~/components/MobileHeader.vue';
+import { mapActions, mapState } from 'pinia';
+import { useProfileStore } from '~/pinia-store/useProfileStore';
 
+const Mappers = Vue.extend({
+    computed: {
+        ...mapState(useProfileStore, ['profile']),
+    },
+    methods: {
+        ...mapActions(useProfileStore, ['getProfileInformation']),
+    },
+});
+
+Component.registerHooks(['fetch']);
 @Component({
     components: {
         BaseContainer,
@@ -99,7 +111,7 @@ import MobileHeader from '~/components/MobileHeader.vue';
         MobileHeader,
     },
 })
-export default class StickyHeader extends Vue {
+export default class StickyHeader extends Mappers {
     @Ref('mobileHeader') mobileHeader!: typeof MobileHeader;
 
     @Ref('header') header!: HTMLDivElement;
@@ -113,7 +125,17 @@ export default class StickyHeader extends Vue {
 
     topDistance = 0;
 
-    transperentMutation = this.transperent;
+    get transperentMutation() {
+        return this.transperent;
+    }
+
+    set transperentMutation(value: boolean) {
+        this.transperentMutation = value;
+    }
+
+    get profileData() {
+        return this.profile.data;
+    }
 
     get navigationsElements(): Array<{
         name: string,
@@ -188,6 +210,10 @@ export default class StickyHeader extends Vue {
 
     routeToAuthPage() {
         this.$router.push('/auth');
+    }
+
+    async fetch() {
+        await this.getProfileInformation();
     }
 }
 

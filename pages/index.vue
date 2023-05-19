@@ -30,6 +30,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { BaseMessage, BaseContainer } from '~/components/base';
 import LandingSection from '~/components/LandingSection.vue';
+import fetchProfileData from '~/middleware/fetchProfileData';
 
 Component.registerHooks(['head']);
 @Component({
@@ -39,7 +40,9 @@ Component.registerHooks(['head']);
         BaseMessage,
         BaseContainer,
         LandingSection,
+
     },
+    middleware: [fetchProfileData],
 })
 export default class homePage extends Vue {
     header = 'Главная страница сайта';

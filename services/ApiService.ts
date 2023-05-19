@@ -1,4 +1,4 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 
 export default class APIService {
     protected $axios: NuxtAxiosInstance;
@@ -6,5 +6,4 @@ export default class APIService {
     constructor($axios: NuxtAxiosInstance) {
         this.$axios = $axios;
     }
-
 }

@@ -4,7 +4,7 @@ import ActivitiesComplex from '~/services/ActivitiesComplex';
 import Subscription from '~/services/SubscriptionService';
 import Activity from '~/services/Acitvity';
 import BodyPart from '~/services/BodyParts';
-
+import Profile from '~/services/ProfileService';
 
 const accessor: Plugin = (ctx) => {
     const {
@@ -13,9 +13,10 @@ const accessor: Plugin = (ctx) => {
         },
     } = ctx;
     const complex = new ActivitiesComplex($axios);
-    const subscription = new Subscription($axios)
-    const activity = new Activity($axios)
-    const bodyPart = new BodyPart($axios)
+    const subscription = new Subscription($axios);
+    const activity = new Activity($axios);
+    const bodyPart = new BodyPart($axios);
+    const profile = new Profile($axios);
 
     const services = {
         i18n,
@@ -25,6 +26,7 @@ const accessor: Plugin = (ctx) => {
         subscription,
         activity,
         bodyPart,
+        profile,
     };
 
     initializeServices(services);

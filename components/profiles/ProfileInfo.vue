@@ -1,85 +1,109 @@
 <template>
-    <base-container :class="$style.info">
-        <div :class="$style.left">
-            <base-text as="div" size="lg">
-                {{ name }}
-            </base-text>
-            <base-text>
-                {{ $auth.user.email }}
-            </base-text>
-        </div>
-        <div :class="$style.right">
-            <ProfileCard>
-                <card-container>
-                    <card-activities-complex
-                        v-for="(activity, index) of complexes"
-                        :key="index"
-                        :title="activity.title"
-                        :description="activity.description"
-                        :authorName="
-                            getFullName(
-                                activity.author.name,
-                                activity.author.surname
-                            )
-                        "
-                        :authorEmail="activity.author.email"
-                        :dateCreation="activity.date_creation"
-                        :is-subscribed="true"
-                        @unsubscribeFromComplex="
-                            unsubscribeFromProfile(activity.id_activities_complex)
-                        "
-                        @routeToComplex="
-                            routeToComplex(activity.id_activities_complex)
-                        "
-                    />
-                </card-container>
-            </ProfileCard>
-        </div>
-    </base-container>
+    <div>
+        <gym-title>
+            Личный профиль
+        </gym-title>
+        <base-message v-if="$auth.user.isActivated" type="warning">
+            Для получение полного функционала сайта, активируйте аккаунт по почте!
+        </base-message>
+        <base-container :class="$style.info">
+            <div :class="$style.left">
+                <form-row title="Почта">
+                    <base-text>
+                        {{ profileData.email }}
+                    </base-text>
+                </form-row>
+                <form-row title="ФИО">
+                    <base-text>
+                        {{ name || "Не заполнено" }}
+                    </base-text>
+                    <base-button
+                        variant="unstyle"
+                        @click="editNameModal.show=true"
+                    >
+                        <base-icon color="basic" :path="icons.editName" />
+                    </base-button>
+                </form-row>
+            </div>
+        </base-container>
+        <edit-name-modal
+            ref="editNameModal"
+            :profile-data="profileData"
+            @close="editNameModal.show = false"
+            @confirm="updateProfileInfo"
+        />
+    </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Mixins, Emit } from "vue-property-decorator";
-import { BaseContainer, BaseText } from "~/components/base";
-import { getFullNameFromNameAndSurname } from "~/utils/general";
-import { FormRow } from "~/components/form/";
-import { ActivitiesComplexWithActivities } from "~/types/ActivitiesComplex";
-import CardContainer from "~/components/CardContainer.vue";
-import CardActivitiesComplex from "~/components/CardActivitiesComplex.vue";
-import TraningsCardMixin from "~/components/mixins/TraningCard";
-import { mdiCalendarClock } from "@mdi/js"
+import {
+    Component, Vue, Ref,
+} from 'vue-property-decorator';
+import {
+    BaseContainer, BaseText, BaseMessage, BaseIcon,
+} from '~/components/base';
+import { getFullNameFromNameAndSurname } from '~/utils/general';
+import { FormRow } from '~/components/form/';
+import CardContainer from '~/components/CardContainer.vue';
+import CardActivitiesComplex from '~/components/CardActivitiesComplex.vue';
+import { mdiAccountEdit } from '@mdi/js';
+import GymTitle from '~/components/Title.vue';
+import { mapState, mapActions } from 'pinia';
+import { useProfileStore } from '~/pinia-store/useProfileStore';
+import EditNameModal from './EditNameModal.vue';
 
+const Mappers = Vue.extend({
+    computed: {
+        ...mapState(useProfileStore, ['profile']),
+    },
+    methods: {
+        ...mapActions(useProfileStore, ['getProfileInformation']),
+    },
+});
+
+Component.registerHooks(['fetch']);
 @Component({
     components: {
+        GymTitle,
         BaseContainer,
         BaseText,
+        BaseIcon,
         FormRow,
+        BaseMessage,
         CardContainer,
         CardActivitiesComplex,
+        EditNameModal,
     },
 })
-export default class ProfileInfo extends Mixins(TraningsCardMixin) {
-    @Prop({
-        type: Array as () => ActivitiesComplexWithActivities[],
-    })
-    complexes?: ActivitiesComplexWithActivities[];
-    dataIcon = mdiCalendarClock;
-    get name() {
-        return this.$auth.user && this.$auth.user.name
-            ? getFullNameFromNameAndSurname(
-                  (this.$auth.user.name as string) || undefined,
-                  (this.$auth.user.surname as string) || undefined
-              )
-            : this.$auth.user!.email;
-    }
-    async unsubscribeFromProfile(id: number | string) {
-        await this.unsubscribe(id);
-        if (!this.isUnsubscribed.error) {
-            this.updateInfo();
-        }
+export default class ProfileInfo extends Mappers {
+    @Ref('editNameModal') editNameModal!: typeof EditNameModal;
+
+    icons = {
+        editName: mdiAccountEdit,
+    };
+
+    get profileData() {
+        return this.profile.data;
     }
 
-    @Emit("updateInfo")
-    updateInfo() {}
+    get name() {
+        return getFullNameFromNameAndSurname(
+            this.profileData?.name || null,
+            this.profileData?.surname || null,
+        );
+    }
+
+    async fetchInfo() {
+        await this.getProfileInformation();
+    }
+
+    async updateProfileInfo() {
+        await this.fetchInfo();
+        this.editNameModal.show = false;
+    }
+
+    async fetch() {
+        await this.fetchInfo();
+    }
 }
 </script>
 
@@ -95,7 +119,4 @@ export default class ProfileInfo extends Mixins(TraningsCardMixin) {
     flex: 0 1 30%;
 }
 
-.right {
-    flex: 1 1 auto;
-}
 </style>

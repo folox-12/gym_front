@@ -64,7 +64,7 @@
                         </base-text>
                         <slot
                             :filters="filters"
-                            :updatePage="updatePageHandler"
+                            :update-page="updatePageHandler"
                             :total="total"
                         />
                     </div>
@@ -74,33 +74,35 @@
     </base-container>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import {
+    Vue, Component, Prop, Watch,
+} from 'vue-property-decorator';
 import {
     BaseContainer,
     BaseText,
     BaseLoader,
     BaseInput,
-} from "~/components/base";
-import { FiltersTypes } from "~/types/Filters";
-import { useFiltersStore } from "~/pinia-store/useFiltersStore";
-import { mapActions, mapState } from "pinia";
-import { mdiMagnify } from "@mdi/js";
+} from '~/components/base';
+import { FiltersTypes } from '~/types/Filters';
+import { useFiltersStore } from '~/pinia-store/useFiltersStore';
+import { mapActions, mapState } from 'pinia';
+import { mdiMagnify } from '@mdi/js';
 
 const Mappers = Vue.extend({
     computed: {
-        ...mapState(useFiltersStore, ["filters"]),
+        ...mapState(useFiltersStore, ['filters']),
     },
 
     methods: {
         ...mapActions(useFiltersStore, [
-            "updatePagging",
-            "updateSearch",
-            "updatePaggingSize",
-            "resetFilters",
+            'updatePagging',
+            'updateSearch',
+            'updatePaggingSize',
+            'resetFilters',
         ]),
     },
 });
-Component.registerHooks(["fetch"]);
+Component.registerHooks(['fetch']);
 @Component({
     components: {
         BaseContainer,
@@ -136,13 +138,14 @@ export default class Filters extends Mappers {
 
     @Prop({
         type: String,
-        default: "Поиск по названию",
+        default: 'Поиск по названию',
     })
     readonly searchString?: string;
 
-    search = "";
+    search = '';
 
     updatePageHandlerValue = false;
+
     updateSearchValue = false;
 
     isOpen = false;
@@ -156,9 +159,9 @@ export default class Filters extends Mappers {
         }
     }
 
-    updateSearchFilter(clear: boolean = false) {
+    updateSearchFilter(clear = false) {
         if (clear) {
-            this.search = "";
+            this.search = '';
         }
 
         if (this.search !== this.filters.search) {
@@ -167,8 +170,8 @@ export default class Filters extends Mappers {
         }
     }
 
-    @Watch("updateSearchValue")
-    @Watch("updatePageHandlerValue")
+    @Watch('updateSearchValue')
+    @Watch('updatePageHandlerValue')
     async refetchData(newVal: boolean, oldVal: boolean) {
         if (this.filters.search && !this.updatePageHandlerValue && newVal) {
             this.updatePagging(1);
