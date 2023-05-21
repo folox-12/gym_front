@@ -5,6 +5,7 @@ import Subscription from '~/services/SubscriptionService';
 import Activity from '~/services/Acitvity';
 import BodyPart from '~/services/BodyParts';
 import Profile from '~/services/ProfileService';
+import CurrentTraning from '~/services/CurrentTraningsService';
 
 const accessor: Plugin = (ctx) => {
     const {
@@ -17,6 +18,7 @@ const accessor: Plugin = (ctx) => {
     const activity = new Activity($axios);
     const bodyPart = new BodyPart($axios);
     const profile = new Profile($axios);
+    const traning = new CurrentTraning($axios);
 
     const services = {
         i18n,
@@ -27,6 +29,7 @@ const accessor: Plugin = (ctx) => {
         activity,
         bodyPart,
         profile,
+        traning,
     };
 
     initializeServices(services);

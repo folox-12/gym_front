@@ -28,9 +28,8 @@ export default {
         '@/assets/style/bootstrap-grid.min.css',
         '@/node_modules/normalize-css/normalize.css',
         '@/node_modules/vue-select/dist/vue-select.css',
-        '@/node_modules/vue-simple-calendar/static/css/default.css',
+        '@/node_modules/vue-simple-calendar/static/css/gcal.css',
         '@/assets/style/main.less',
-        '@/assets/style/vue-calendar.less',
     ],
     styleResources: {
         less: [

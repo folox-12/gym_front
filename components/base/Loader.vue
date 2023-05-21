@@ -6,14 +6,14 @@
             color="basic"
             :width="width"
             :height="height"
-           />
+        />
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { mdiLoading } from "@mdi/js"
-import BaseIcon from "./Icon.vue";
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { mdiLoading } from '@mdi/js';
+import BaseIcon from './Icon.vue';
 
 @Component({
     components: {
@@ -21,7 +21,8 @@ import BaseIcon from "./Icon.vue";
     },
 })
 export default class Loader extends Vue {
-    icon = mdiLoading
+    icon = mdiLoading;
+
     @Prop({
         type: Number,
         default: 48,

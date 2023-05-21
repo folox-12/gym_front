@@ -16,26 +16,26 @@
             <nuxt-link to="/tranings/">
                 {{ "<< Вернуться" }}
             </nuxt-link>
-        </base-container>
-        <gym-title>
-            <template #default>
-                {{ currentTraningsInformation.title }}
-            </template>
-            <template #buttons>
-                <div class="d-flex">
-                    <div v-for="(icon, index) of icons" :key="index">
-                        <base-button
-                            v-if="icon.show"
-                            variant="unstyle"
-                            :title="icon.title"
-                            @click="icon.action"
-                        >
-                            <base-icon :path="icon.icon" :color="icon.color" />
-                        </base-button>
+            <gym-title>
+                <template #default>
+                    {{ currentTraningsInformation.title }}
+                </template>
+                <template #buttons>
+                    <div class="d-flex">
+                        <div v-for="(icon, index) of icons" :key="index">
+                            <base-button
+                                v-if="icon.show"
+                                variant="unstyle"
+                                :title="icon.title"
+                                @click="icon.action"
+                            >
+                                <base-icon :path="icon.icon" :color="icon.color" />
+                            </base-button>
+                        </div>
                     </div>
-                </div>
-            </template>
-        </gym-title>
+                </template>
+            </gym-title>
+        </base-container>
         <traning-form-edit
             ref="traningFormEdit"
             :loading="currentActivity.loading"

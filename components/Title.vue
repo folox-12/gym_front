@@ -1,27 +1,25 @@
 <template>
-    <base-container>
-        <div :class="$style.content">
-            <h1 class="gm--title">
-                <base-text size="xxl" weight="bold" color="dark">
-                    <slot />
-                </base-text>
-            </h1>
-            <div v-if="$slots.buttons" :class="$style.buttons">
-                <slot name="buttons">
-                    <base-button :class="$style.button" v-if="buttonText">
-                        {{ buttonText }}
-                    </base-button>
-                </slot>
-            </div>
+    <div :class="$style.content">
+        <h1 class="gm--title" :class="$style.title">
+            <base-text size="xxl" weight="bold" color="dark">
+                <slot />
+            </base-text>
+        </h1>
+        <div v-if="$slots.buttons" :class="$style.buttons">
+            <slot name="buttons">
+                <base-button v-if="buttonText" :class="$style.button">
+                    {{ buttonText }}
+                </base-button>
+            </slot>
         </div>
-    </base-container>
+    </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { BaseText, BaseContainer, BaseButton } from "~/components/base";
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { BaseText, BaseContainer, BaseButton } from '~/components/base';
 
 @Component({
-    name: "GymTitle",
+    name: 'GymTitle',
     components: {
         BaseText,
         BaseContainer,
@@ -46,12 +44,12 @@ export default class GymTitle extends Vue {
         required: false,
     })
     readonly buttonText?: string;
-
 }
 </script>
 <style lang="less" module>
 .h1 {
     display: block;
+    font-size: var(--gm-font-size-xxl)!important;
 }
 
 .content {
@@ -59,6 +57,10 @@ export default class GymTitle extends Vue {
     justify-content: start;
     gap: 5px;
     align-items: center;
+}
+
+.title {
+    font-size: var(--gm-font-size-xxl)!important;
 }
 
 .button {
@@ -70,6 +72,12 @@ export default class GymTitle extends Vue {
     & > div {
         display: flex;
         gap: 5px;
+    }
+
+}
+
+@media screen and(max-width: @md) {
+    .title {
     }
 }
 </style>

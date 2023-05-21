@@ -42,7 +42,7 @@
                     :class="$style.buttons"
                 >
                     <base-button
-                        v-if="!$auth.loggedIn"
+                        v-if="!profileData"
                         :text="$t('general.signIn')"
                         @click="routeToAuthPage"
                     />
@@ -92,6 +92,7 @@ import { BaseContainer, BaseButton, BaseText } from '~/components/base/';
 import MobileHeader from '~/components/MobileHeader.vue';
 import { mapActions, mapState } from 'pinia';
 import { useProfileStore } from '~/pinia-store/useProfileStore';
+import fetchProfileData from '~/middleware/fetchProfileData';
 
 const Mappers = Vue.extend({
     computed: {
@@ -109,6 +110,7 @@ const Mappers = Vue.extend({
         BaseText,
         MobileHeader,
     },
+    middleware: [fetchProfileData],
 })
 export default class StickyHeader extends Mappers {
     @Ref('mobileHeader') mobileHeader!: typeof MobileHeader;
@@ -203,10 +205,6 @@ export default class StickyHeader extends Mappers {
 
     routeToAuthPage() {
         this.$router.push('/auth');
-    }
-
-    async fetch() {
-        await this.getProfileInformation();
     }
 }
 

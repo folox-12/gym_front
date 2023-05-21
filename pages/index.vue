@@ -18,10 +18,17 @@
             text-left
         />
         <landing-section
-            title="Создания комплекса упражнений"
+            title="Созданиe комплексов упражнений"
             description="Модуль позволяет авторизированным и верифицированным пользователям создавать свои уникальные программы"
             image="/img/landing/new_edit.png"
             dark
+        />
+        <landing-section
+            title="Добавление тренировки в личный кабинет"
+            description="Модуль подписки позволяет пользователю добавить выбранный комплекс в личный кабинет."
+            image="/img/landing/registration.png"
+            dark
+            text-left
         />
     </div>
 </template>

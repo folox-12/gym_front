@@ -12,6 +12,7 @@ export interface ProfileUser {
 }
 export interface User extends UserAsAuthor {
     password?: string,
-    isActivated: boolean,
+    isActivated?: boolean,
+    is_activated?: boolean,
     activation_link: string,
 }

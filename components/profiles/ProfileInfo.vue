@@ -3,7 +3,7 @@
         <gym-title>
             Личный профиль
         </gym-title>
-        <base-message v-if="$auth.user.isActivated" type="warning">
+        <base-message v-if="!profileData.is_activated" type="warning">
             Для получение полного функционала сайта, активируйте аккаунт по почте!
         </base-message>
         <base-container :class="$style.info">
@@ -60,7 +60,6 @@ const Mappers = Vue.extend({
     },
 });
 
-Component.registerHooks(['fetch']);
 @Component({
     components: {
         GymTitle,
@@ -100,10 +99,6 @@ export default class ProfileInfo extends Mappers {
         await this.fetchInfo();
         this.editNameModal.show = false;
     }
-
-    async fetch() {
-        await this.fetchInfo();
-    }
 }
 </script>
 
@@ -113,6 +108,7 @@ export default class ProfileInfo extends Mappers {
     background-color: #fff;
     display: flex;
     gap: 5px;
+    box-shadow: var(--gm-shadow-general-box);
 }
 
 .left {

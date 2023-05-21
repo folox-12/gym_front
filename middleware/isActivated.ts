@@ -1,10 +1,14 @@
 import { Middleware } from '@nuxt/types';
+import { useProfileStore } from '~/pinia-store/useProfileStore';
 
 const isActivated: Middleware = async(context) => {
-    const { $auth } = context;
+    const { $pinia, $auth } = context;
 
-    if ($auth.loggedIn && $auth.user?.isActivated) {
-        context.redirect('/tranings');
+    const { isActivated: activated, getProfileInformation } = useProfileStore($pinia);
+    await getProfileInformation();
+
+    if (!$auth.user?.isActivated && !activated) {
+        context.redirect('/');
     }
 };
 

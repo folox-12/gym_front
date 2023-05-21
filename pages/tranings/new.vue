@@ -16,12 +16,12 @@
             <nuxt-link to="/tranings/">
                 {{ "<< Вернуться" }}
             </nuxt-link>
+            <gym-title>
+                <template #default>
+                    Новый комплекс упражнений
+                </template>
+            </gym-title>
         </base-container>
-        <gym-title>
-            <template #default>
-                Новый комплекс упражнений
-            </template>
-        </gym-title>
         <traning-form-edit
             ref="traningFormEdit"
             :loading="currentActivity.loading"

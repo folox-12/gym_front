@@ -27,25 +27,27 @@
                 сайте!
             </base-text>
         </base-message>
-        <gym-title>
-            <template #default>
-                {{ currentTraningsInformation.title }}
-            </template>
-            <template #buttons>
-                <div class="d-flex">
-                    <div v-for="(icon, index) of icons" :key="index">
-                        <base-button
-                            v-if="icon.show"
-                            variant="unstyle"
-                            :title="icon.title"
-                            @click="icon.action"
-                        >
-                            <base-icon :path="icon.icon" :color="icon.color" />
-                        </base-button>
+        <base-container>
+            <gym-title>
+                <template #default>
+                    {{ currentTraningsInformation.title }}
+                </template>
+                <template #buttons>
+                    <div class="d-flex">
+                        <div v-for="(icon, index) of icons" :key="index">
+                            <base-button
+                                v-if="icon.show"
+                                variant="unstyle"
+                                :title="icon.title"
+                                @click="icon.action"
+                            >
+                                <base-icon :path="icon.icon" :color="icon.color" />
+                            </base-button>
+                        </div>
                     </div>
-                </div>
-            </template>
-        </gym-title>
+                </template>
+            </gym-title>
+        </base-container>
         <traning-form
             :activity="currentTraningsInformation"
             :loading="currentActivity.loading"
@@ -143,7 +145,7 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
                 icon: mdiDelete,
                 color: 'danger',
                 title: 'Удалить',
-                action: () => this.showConfirmModal = true,
+                action: () => { this.showConfirmModal = true; },
                 show: this.isUserAuthor,
             },
         };
@@ -204,12 +206,13 @@ export default class CurrentTranings extends Mixins(getCurrentId, Mappers) {
         }
 
         if (this.isUnsubscribed.error || this.isSubscribed.error) {
-            return this.$notify({
+            this.$notify({
                 group: 'server-response',
                 type: 'error',
                 title: 'Ошибка',
                 text: errorText,
             });
+            return;
         }
         this.$notify({
             group: 'server-response',

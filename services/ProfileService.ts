@@ -1,4 +1,4 @@
-import { ProfileUser } from '~/types/Users';
+import { User } from '~/types/Users';
 import { API_URL, request } from './generic.services';
 import APIService from './ApiService';
 
@@ -11,15 +11,15 @@ class Profile extends APIService {
     }
 
     async fetchInfo() {
-        const data = request<ProfileUser>(() => this.$axios
-            .$get<ProfileUser>(
+        const data = request<User>(() => this.$axios
+            .$get<User>(
                 `${API_URL}/profile/`,
             ));
 
         return data;
     }
 
-    async changeProfileName(form: Partial<ProfileUser>) {
+    async changeProfileName(form: Partial<User>) {
         const data = request<boolean>(() => this.$axios
             .$post<boolean>(
                 `${API_URL}/profile/name`,

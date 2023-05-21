@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 import { NetworkData } from '~/types/helpers';
 import { $services } from '~/utils/service';
-import { ProfileUser } from '~/types/Users';
+import { User } from '~/types/Users';
 
 interface State {
-    profile: NetworkData<ProfileUser>,
+    profile: NetworkData<User>,
     changeName: NetworkData<boolean>,
 }
 
@@ -23,6 +23,12 @@ export const useProfileStore = defineStore('profile', {
         },
     }),
 
+    getters: {
+        isActivated({ profile }) {
+            return !!profile.data?.is_activated;
+        },
+    },
+
     actions: {
         async getProfileInformation() {
             this.profile.loading = true;
@@ -35,7 +41,7 @@ export const useProfileStore = defineStore('profile', {
             this.profile = { data, loading: false, error: null };
         },
 
-        async changeNameMethod(form: Partial<ProfileUser>) {
+        async changeNameMethod(form: Partial<User>) {
             this.changeName.loading = true;
 
             const { data, error } = await $services.profile.changeProfileName(form);

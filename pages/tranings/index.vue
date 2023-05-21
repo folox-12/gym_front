@@ -10,20 +10,21 @@
                 а затем перезайдите в систему.
             </base-text>
         </base-message>
-        <gym-title>
-            <template #default>
-                Выбор спортивной программы
-            </template>
-
-            <template #buttons>
-                <base-button
-                    v-if="$auth.user?.isActivated"
-                    @click="routeToNewPage"
-                >
-                    Создать
-                </base-button>
-            </template>
-        </gym-title>
+        <base-container>
+            <gym-title>
+                <template #default>
+                    Выбор спортивной программы
+                </template>
+                <template #buttons>
+                    <base-button
+                        v-if="$auth.user?.isActivated"
+                        @click="routeToNewPage"
+                    >
+                        Создать
+                    </base-button>
+                </template>
+            </gym-title>
+        </base-container>
         <filters
             :fetch-data="getAllActivities"
             :default-filters="defaultFilters"
@@ -81,13 +82,14 @@ import { useActivitiesComplex } from '~/pinia-store/ActivitiesComplexStore';
 import { useSubscription } from '~/pinia-store/SubscriptionStore';
 import Filters from '~/components/Filters.vue';
 import Paggination from '~/components/paggination.vue';
-import { BaseCard, BaseButton } from '~/components/base';
+import { BaseCard, BaseButton, BaseContainer } from '~/components/base';
 import CardContainer from '~/components/CardContainer.vue';
 import CardActivitiesComplex from '~/components/CardActivitiesComplex.vue';
 import { getFullNameFromNameAndSurname } from '~/utils/general';
 import fetchSubscription from '~/middleware/fetchSubscribedIds';
 
 const Mappers = Vue.extend({
+    middleware: [fetchSubscription],
     computed: {
         ...mapState(useActivitiesComplex, [
             'activities',
@@ -103,9 +105,6 @@ const Mappers = Vue.extend({
 
         ...mapActions(useSubscription, ['subscribeToComplex', 'unsubscribeFromComplex', 'fetchSubscribedComplexesId']),
     },
-
-    middleware: [fetchSubscription],
-
 });
 Component.registerHooks(['head']);
 @Component({
@@ -118,6 +117,7 @@ Component.registerHooks(['head']);
         BaseButton,
         CardContainer,
         CardActivitiesComplex,
+        BaseContainer,
     },
 })
 export default class homePage extends Mappers {

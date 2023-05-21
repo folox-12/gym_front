@@ -4,45 +4,41 @@
             Подиски
         </gym-title>
         <base-container :class="$style.info">
-            <ProfileCard>
-                <card-container>
-                    <card-activities-complex
-                        v-for="(activity, index) of subscription"
-                        :key="index"
-                        :title="activity.title"
-                        :description="activity.description"
-                        :author-name="
-                            getFullName(
-                                activity.author.name,
-                                activity.author.surname
-                            )
-                        "
-                        :author-email="activity.author.email"
-                        :date-creation="activity.date_creation"
-                        :is-subscribed="true"
-                        @unsubscribeFromComplex="
-                            unsubscribeFromProfile(activity.id_activities_complex)
-                        "
-                        @routeToComplex="
-                            routeToComplex(activity.id_activities_complex)
-                        "
-                    />
-                </card-container>
-            </ProfileCard>
+            <card-container style="{'width': 100%}">
+                <card-activities-complex
+                    v-for="(activity, index) of subscription"
+                    :key="index"
+                    :title="activity.title"
+                    :description="activity.description"
+                    :author-name="
+                        getFullName(
+                            activity.author.name,
+                            activity.author.surname
+                        )
+                    "
+                    :author-email="activity.author.email"
+                    :date-creation="activity.date_creation"
+                    :is-subscribed="true"
+                    @unsubscribeFromComplex="
+                        unsubscribeFromProfile(activity.id_activities_complex)
+                    "
+                    @routeToComplex="
+                        routeToComplex(activity.id_activities_complex)
+                    "
+                />
+            </card-container>
         </base-container>
     </div>
 </template>
 <script lang="ts">
 import {
-    Component, Prop, Mixins, Vue,
+    Component, Mixins, Vue,
 } from 'vue-property-decorator';
 import { BaseContainer, BaseText } from '~/components/base';
 import { FormRow } from '~/components/form/';
-import { ActivitiesComplexWithActivities } from '~/types/ActivitiesComplex';
 import CardContainer from '~/components/CardContainer.vue';
 import CardActivitiesComplex from '~/components/CardActivitiesComplex.vue';
 import TraningsCardMixin from '~/components/mixins/TraningCard';
-import { mdiCalendarClock } from '@mdi/js';
 import GymTitle from '~/components/Title.vue';
 import { mapState, mapActions } from 'pinia';
 import { useSubscription } from '~/pinia-store/SubscriptionStore';
@@ -97,6 +93,7 @@ export default class TraningSubscription extends Mixins(TraningsCardMixin, Mappe
 .info {
     padding: 15px;
     background-color: #fff;
+    box-shadow: var(--gm-shadow-general-box);
     display: flex;
     gap: 5px;
 }

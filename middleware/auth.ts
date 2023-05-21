@@ -6,13 +6,11 @@ const authorizated: Middleware = async(context) => {
     const isAuthorizatedPage: boolean = context.route.path.includes('auth');
 
     if (isAuthorizatedPage) {
-        if(isAuth){
+        if (isAuth) {
             return context.redirect('/');
         }
-    } else {
-        if (!isAuth) {
-            return context.redirect('/');
-        }
+    } else if (!isAuth) {
+        return context.redirect('/');
     }
 };
 
