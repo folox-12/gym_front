@@ -42,7 +42,7 @@
                     :class="$style.buttons"
                 >
                     <base-button
-                        v-if="!profileData"
+                        v-if="!$auth.loggedIn"
                         :text="$t('general.signIn')"
                         @click="routeToAuthPage"
                     />

@@ -27,9 +27,12 @@ class Subscription extends APIService {
     }
 
     async fetchSubscribtion() {
-        const data = request<ActivitiesComplexWithActivities[]>(() => this.$axios.$get<ActivitiesComplexWithActivities[]>(
-            `${API_URL}/profile/subscription/`,
-        ));
+        const data = request<ActivitiesComplexWithActivities[]>(
+            () => this.$axios
+                .$get<ActivitiesComplexWithActivities[]>(
+                    `${API_URL}/profile/subscription/`,
+                ),
+        );
 
         return data;
     }

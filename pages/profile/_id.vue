@@ -352,6 +352,7 @@ export default defineComponent({
 .content {
     display: flex;
     gap: 10px;
+
     & > div {
         padding: 15px;
         border-radius: 5px;
@@ -368,7 +369,7 @@ export default defineComponent({
     box-shadow: none;
 
     &.show {
-        flex: 1 1 45%;
+        flex: 0 1 35%;
         background-color: #fff;
         box-shadow: var(--gm-shadow-general-box);
     }
@@ -445,7 +446,7 @@ table.subscription {
     padding-block: 10px;
 }
 
-@media screen and (max-width: @lg) {
+@media screen and (max-width: @xl) {
     .content {
         flex-direction: column;
 
